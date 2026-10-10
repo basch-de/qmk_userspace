@@ -224,13 +224,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
     return true;
 };
-
-bool music_mask_user(uint16_t keycode) {
-  switch (keycode) {
-    case RAISE:
-    case LOWER:
-      return false;
-    default:
-      return true;
-  }
-}
