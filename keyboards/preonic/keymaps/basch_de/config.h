@@ -19,6 +19,9 @@
 // Default after EEPROM initialization/reset; existing saved settings are preserved.
 #define RGBLIGHT_DEFAULT_ON false
 
+// Disable Music Mode while retaining audio for the startup melody.
+#define NO_MUSIC_MODE
+
 #ifdef AUDIO_ENABLE
 #    define STARTUP_SONG SONG(PREONIC_SOUND)
 // #define STARTUP_SONG SONG(NO_SOUND)

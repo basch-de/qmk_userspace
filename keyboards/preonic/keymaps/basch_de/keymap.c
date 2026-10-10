@@ -133,9 +133,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
  * | QK_REBOOT | QK_BOOT | DB_TOGG |  TRNS |  TRNS  |   TRNS  |   TRNS  | TRNS | TRNS | TRNS | TRNS | Del  |
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
- * |    TRNS   |   TRNS  | MU_NEXT | AU_ON | AU_OFF | AG_NORM | AG_SWAP | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * |    TRNS   |   TRNS  |   TRNS  | AU_ON | AU_OFF | AG_NORM | AG_SWAP | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
- * |  UG_TOGG  |   TRNS  |   TRNS  | MU_ON | MU_OFF |   TRNS  |   TRNS  | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * |  UG_TOGG  |   TRNS  |   TRNS  |  TRNS |  TRNS  |   TRNS  |   TRNS  | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
  * |  UG_NEXT  |   TRNS  |   TRNS  |  TRNS |  TRNS  |   TRNS  |   TRNS  | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
@@ -143,8 +143,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] = LAYOUT_preonic_grid(
   KC_F1,      KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,   KC_F12,
   QK_REBOOT,  QK_BOOT,  DB_TOGG,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  KC_DEL,
-  _______,    _______,  MU_NEXT,  AU_ON,    AU_OFF,   AG_NORM,  AG_SWAP,  _______,  _______,  _______,  _______,  _______,
-  UG_TOGG,    _______,  _______,  MU_ON,    MU_OFF,   _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,    _______,  _______,  AU_ON,    AU_OFF,   AG_NORM,  AG_SWAP,  _______,  _______,  _______,  _______,  _______,
+  UG_TOGG,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
   UG_NEXT,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 ),
 
