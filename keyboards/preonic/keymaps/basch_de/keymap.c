@@ -236,18 +236,6 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
   return true;
 }
 
-bool dip_switch_update_user(uint8_t index, bool active) {
-    switch (index) {
-        case 0:
-            if (active) {
-                layer_on(_ADJUST);
-            } else {
-                layer_off(_ADJUST);
-            }
-            break;
-    }
-    return true;
-}
 bool music_mask_user(uint16_t keycode) {
   switch (keycode) {
     case RAISE:
