@@ -5,6 +5,8 @@ Dieses Repository enthält die QMK-Userspace-Keymap für eine Preonic Drop rev3.
 - Keyboard-Target: `preonic/rev3_drop`
 - Keymap: `basch_de`
 - Verzeichnis: `keyboards/preonic/keymaps/basch_de/`
+- Physische Belegung: 60 einzelne 1u-Tasten in einem Raster mit fünf Reihen
+  und zwölf Spalten; die ehemalige zentrale 2u-Leertaste ist aufgeteilt.
 
 # Arbeitsbereich
 
@@ -57,12 +59,10 @@ Tastenbelegung erhalten.
 ## Darstellung der Tastenmatrix
 
 - Jeden Layer in `keymap.c` entsprechend den physischen Tastenpositionen
-  formatieren: vier Reihen mit zwölf Tasten und eine untere Reihe mit elf
-  Tasten bei `LAYOUT_preonic_1x2uC`.
+  formatieren: fünf Reihen mit jeweils zwölf Tasten, insgesamt 60 Belegungen.
 - Tasten derselben physischen Spalte innerhalb eines Layers beginnen an
-  derselben Zeichenposition. Die zentrale 2u-Taste der unteren Reihe beginnt
-  in Spalte 6 und belegt den Platz der Spalten 6 und 7; die nächste Taste
-  beginnt wieder unter Spalte 8.
+  derselben Zeichenposition. Auch die untere Reihe hat zwölf unabhängige
+  Positionen; die mittleren Tasten in Spalte 6 und 7 separat darstellen.
 - Spaltenbreiten für jeden Layer unabhängig anhand der längsten vollständigen
   Keycode-Ausdrücke bestimmen. Hinter dem Komma mindestens zwei Leerzeichen
   Abstand lassen. Spalten bei Änderungen nach Bedarf verbreitern oder verengen.
@@ -71,7 +71,8 @@ Tastenbelegung erhalten.
 - Beim Formatieren keine Keycodes, Argumente, Reihenfolge oder Funktion ändern.
 - Die Belegungsdiagramme in den Kommentaren über allen Layern bei jeder
   Belegungsänderung aktualisieren. Sie müssen die tatsächlichen Keycodes und
-  physischen Positionen einschließlich der zentralen 2u-Taste wiedergeben.
+  physischen Positionen einschließlich der beiden mittleren 1u-Tasten
+  wiedergeben. Keine Zellen für eine zentrale 2u-Taste zusammenfassen.
 - Tap/Hold-Funktionen und transparente beziehungsweise deaktivierte Tasten
   eindeutig kennzeichnen. Eine Legende für verwendete Abkürzungen pflegen.
 - Spaltenbreiten der Diagramme pro Layer an die Beschriftungen anpassen.
