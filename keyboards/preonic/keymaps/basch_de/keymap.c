@@ -21,7 +21,8 @@ enum preonic_layers {
   _QWERTY,
   _LOWER,
   _RAISE,
-  _ADJUST
+  _ADJUST,
+  _WINDOW
 };
 
 enum preonic_keycodes {
@@ -32,8 +33,18 @@ enum preonic_keycodes {
 
 //#define QWERTY PDF(_QWERTY)
 
+// KC_NO ist der Tap-Platzhalter; case CTL_SPOT in process_record_user() sendet
+// beim Tippen Cmd+Space. Beim Halten liefert LCTL_T weiterhin linken Ctrl.
+#define CTL_SPOT LCTL_T(KC_NO)
+
+// KC_NO ist der Tap-Platzhalter; case WIN_BSP in process_record_user() sendet
+// beim Tippen Option+Backspace. Beim Halten aktiviert LT den WINDOW-Layer.
+#define WIN_BSP LT(_WINDOW, KC_NO)
+
 /* Diagramm-Legende: Tap/Hold zeigt Tippen/Halten, TRNS ist transparent.
  * LCmd/RCmd entsprechen den GUI-Modifiern unter macOS.
+ * Hyper ist linker Ctrl+Alt+Cmd+Shift; Spotlight sendet Cmd+Space.
+ * Sticky Shift gilt nach dem Tippen fuer die naechste Taste, gehalten als Shift.
  * Symbolbeschriftungen benennen QMK-Keycodes, nicht verifizierte EurKEY-next-Ausgaben.
  * NUHS/NUBS sind die ISO-Keycodes, S(...) bezeichnet Shift.
  * Alle fuenf Reihen haben zwoelf einzelne 1u-Tasten.
@@ -41,24 +52,24 @@ enum preonic_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
- * +-------+------+------+------+------------+-------+--------------+-------------+------+------+-----+-----------+
- * |   `   |  1   |  2   |  3   |     4      |   5   |      6       |      7      |  8   |  9   |  0  |     -     |
- * +-------+------+------+------+------------+-------+--------------+-------------+------+------+-----+-----------+
- * |  Tab  |  Q   |  W   |  E   |     R      |   T   |      Y       |      U      |  I   |  O   |  P  | Backslash |
- * +-------+------+------+------+------------+-------+--------------+-------------+------+------+-----+-----------+
- * |   [   |  A   |  S   |  D   |     F      |   G   |      H       |      J      |  K   |  L   |  ;  |     '     |
- * +-------+------+------+------+------------+-------+--------------+-------------+------+------+-----+-----------+
- * |   ]   |  Z   |  X   |  C   |     V      |   B   |      N       |      M      |  ,   |  .   |  /  |     =     |
- * +-------+------+------+------+------------+-------+--------------+-------------+------+------+-----+-----------+
- * | LCtrl | LAlt | LCmd | LCmd | Bksp/Lower | Enter | Space/LShift | Enter/Raise | Left | Down |  Up |   Right   |
- * +-------+------+------+------+------------+-------+--------------+-------------+------+------+-----+-----------+
+ * +-----------------+------+-----+-----+------------+-------+-----------------+-------------+------+------+-----+-----------+
+ * |        `        |  1   |  2  |  3  |     4      |   5   |        6        |      7      |  8   |  9   |  0  |     -     |
+ * +-----------------+------+-----+-----+------------+-------+-----------------+-------------+------+------+-----+-----------+
+ * |    Tab/Hyper    |  Q   |  W  |  E  |     R      |   T   |        Y        |      U      |  I   |  O   |  P  | Backslash |
+ * +-----------------+------+-----+-----+------------+-------+-----------------+-------------+------+------+-----+-----------+
+ * |     Esc/LCmd    |  A   |  S  |  D  |     F      |   G   |        H        |      J      |  K   |  L   |  ;  |   '/RAlt  |
+ * +-----------------+------+-----+-----+------------+-------+-----------------+-------------+------+------+-----+-----------+
+ * |   Sticky Shift  |  Z   |  X  |  C  |     V      |   B   |        N        |      M      |  ,   |  .   |  /  |  =/RShift |
+ * +-----------------+------+-----+-----+------------+-------+-----------------+-------------+------+------+-----+-----------+
+ * | Spotlight/LCtrl | LAlt |  [  |  ]  | Bksp/Lower | Enter | Opt-Bksp/Window | Space/Raise | Left | Down |  Up |   Right   |
+ * +-----------------+------+-----+-----+------------+-------+-----------------+-------------+------+------+-----+-----------+
  */
 [_QWERTY] = LAYOUT_preonic_grid(
-  KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,                 KC_5,    KC_6,            KC_7,                KC_8,     KC_9,     KC_0,     KC_MINS,
-  KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,                 KC_T,    KC_Y,            KC_U,                KC_I,     KC_O,     KC_P,     KC_BSLS,
-  KC_LBRC,  KC_A,     KC_S,     KC_D,     KC_F,                 KC_G,    KC_H,            KC_J,                KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
-  KC_RBRC,  KC_Z,     KC_X,     KC_C,     KC_V,                 KC_B,    KC_N,            KC_M,                KC_COMM,  KC_DOT,   KC_SLSH,  KC_EQL,
-  KC_LCTL,  KC_LALT,  KC_LGUI,  KC_LGUI,  LT(_LOWER, KC_BSPC),  KC_ENT,  LSFT_T(KC_SPC),  LT(_RAISE, KC_ENT),  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RGHT
+  KC_GRV,          KC_1,     KC_2,     KC_3,     KC_4,                 KC_5,    KC_6,     KC_7,                KC_8,     KC_9,     KC_0,     KC_MINS,
+  HYPR_T(KC_TAB),  KC_Q,     KC_W,     KC_E,     KC_R,                 KC_T,    KC_Y,     KC_U,                KC_I,     KC_O,     KC_P,     KC_BSLS,
+  LGUI_T(KC_ESC),  KC_A,     KC_S,     KC_D,     KC_F,                 KC_G,    KC_H,     KC_J,                KC_K,     KC_L,     KC_SCLN,  RALT_T(KC_QUOT),
+  OSM(MOD_LSFT),   KC_Z,     KC_X,     KC_C,     KC_V,                 KC_B,    KC_N,     KC_M,                KC_COMM,  KC_DOT,   KC_SLSH,  RSFT_T(KC_EQL),
+  CTL_SPOT,        KC_LALT,  KC_LBRC,  KC_RBRC,  LT(_LOWER, KC_BSPC),  KC_ENT,  WIN_BSP,  LT(_RAISE, KC_SPC),  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RGHT
 ),
 
 /* Lower
@@ -122,6 +133,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   RM_TOGG,    _______,  MU_NEXT,  AU_ON,    AU_OFF,   AG_NORM,  AG_SWAP,  _______,  _______,  _______,  _______,  _______,
   _______,    AU_PREV,  AU_NEXT,  MU_ON,    MU_OFF,   MI_ON,    MI_OFF,   _______,  _______,  _______,  _______,  _______,
   BACKLIT,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
+),
+
+/* Window (vorerst transparent; Opt-Bksp halten)
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ */
+[_WINDOW] = LAYOUT_preonic_grid(
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 )
 
 };
@@ -132,6 +164,22 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+        case CTL_SPOT:
+          if (record->tap.count) {
+            if (record->event.pressed) {
+              tap_code16(LGUI(KC_SPC));
+            }
+            return false;
+          }
+          break;
+        case WIN_BSP:
+          if (record->tap.count) {
+            if (record->event.pressed) {
+              tap_code16(LALT(KC_BSPC));
+            }
+            return false;
+          }
+          break;
         case BACKLIT:
           if (record->event.pressed) {
             register_code(KC_RSFT);
