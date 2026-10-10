@@ -25,14 +25,6 @@ enum preonic_layers {
   _WINDOW
 };
 
-enum preonic_keycodes {
-  LOWER = SAFE_RANGE,
-  RAISE,
-  BACKLIT
-};
-
-//#define QWERTY PDF(_QWERTY)
-
 // KC_NO is the tap placeholder; case CTL_SPOT in process_record_user() sends
 // Cmd+Space on tap. LCTL_T provides left Ctrl while held.
 #define CTL_SPOT LCTL_T(KC_NO)
@@ -145,7 +137,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
  * |  UG_TOGG  | AU_PREV | AU_NEXT | MU_ON | MU_OFF |  MI_ON  |  MI_OFF | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
- * |  BACKLIT  |   TRNS  |   TRNS  |  TRNS |  TRNS  |   TRNS  |   TRNS  | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * |  UG_NEXT  |   TRNS  |   TRNS  |  TRNS |  TRNS  |   TRNS  |   TRNS  | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +-----------+---------+---------+-------+--------+---------+---------+------+------+------+------+------+
  */
 [_ADJUST] = LAYOUT_preonic_grid(
@@ -153,7 +145,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   QK_REBOOT,  QK_BOOT,  DB_TOGG,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  KC_DEL,
   RM_TOGG,    _______,  MU_NEXT,  AU_ON,    AU_OFF,   AG_NORM,  AG_SWAP,  _______,  _______,  _______,  _______,  _______,
   UG_TOGG,    AU_PREV,  AU_NEXT,  MU_ON,    MU_OFF,   MI_ON,    MI_OFF,   _______,  _______,  _______,  _______,  _______,
-  BACKLIT,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
+  UG_NEXT,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 ),
 
 /* Window (transparent placeholder; hold Opt-Bksp)
@@ -200,26 +192,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
           }
-          break;
-        case BACKLIT:
-          if (record->event.pressed) {
-            register_code(KC_RSFT);
-            #ifdef BACKLIGHT_ENABLE
-              backlight_step();
-            #endif
-            #ifdef RGBLIGHT_ENABLE
-              rgblight_step();
-            #endif
-            #ifdef __AVR__
-            gpio_write_pin_low(E6);
-            #endif
-          } else {
-            unregister_code(KC_RSFT);
-            #ifdef __AVR__
-            gpio_write_pin_high(E6);
-            #endif
-          }
-          return false;
           break;
       }
     return true;
