@@ -16,6 +16,9 @@
 
 #pragma once
 
+// Standard nach EEPROM-Initialisierung/Reset; gespeicherte Einstellungen bleiben erhalten.
+#define RGBLIGHT_DEFAULT_ON false
+
 #ifdef AUDIO_ENABLE
 #    define STARTUP_SONG SONG(PREONIC_SOUND)
 // #define STARTUP_SONG SONG(NO_SOUND)
