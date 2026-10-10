@@ -19,6 +19,7 @@
 
 enum preonic_layers {
   _QWERTY,
+  _GAMING,
   _LOWER,
   _RAISE,
   _ADJUST,
@@ -70,6 +71,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   LGUI_T(KC_ESC),  KC_A,     KC_S,     KC_D,     KC_F,                 KC_G,    KC_H,     KC_J,                KC_K,     KC_L,     KC_SCLN,  RALT_T(KC_QUOT),
   OSM(MOD_LSFT),   KC_Z,     KC_X,     KC_C,     KC_V,                 KC_B,    KC_N,     KC_M,                KC_COMM,  KC_DOT,   KC_SLSH,  RSFT_T(KC_EQL),
   CTL_SPOT,        KC_LALT,  KC_LBRC,  KC_RBRC,  LT(_LOWER, KC_BSPC),  KC_ENT,  WIN_BSP,  LT(_RAISE, KC_SPC),  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RGHT
+),
+
+/* Gaming (vorerst transparent; noch keine Umschalttaste)
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
+ * +------+------+------+------+------+------+------+------+------+------+------+------+
+ */
+[_GAMING] = LAYOUT_preonic_grid(
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,
+  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 ),
 
 /* Lower
