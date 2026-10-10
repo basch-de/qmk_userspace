@@ -1,5 +1,5 @@
-# Keine physischen DIP-Schalter vorhanden.
+# No physical DIP switches installed.
 DIP_SWITCH_ENABLE = no
 
-# Kein physischer Encoder vorhanden.
+# No physical encoder installed.
 ENCODER_ENABLE = no

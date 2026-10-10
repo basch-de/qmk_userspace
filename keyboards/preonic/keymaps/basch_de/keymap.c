@@ -33,21 +33,21 @@ enum preonic_keycodes {
 
 //#define QWERTY PDF(_QWERTY)
 
-// KC_NO ist der Tap-Platzhalter; case CTL_SPOT in process_record_user() sendet
-// beim Tippen Cmd+Space. Beim Halten liefert LCTL_T weiterhin linken Ctrl.
+// KC_NO is the tap placeholder; case CTL_SPOT in process_record_user() sends
+// Cmd+Space on tap. LCTL_T provides left Ctrl while held.
 #define CTL_SPOT LCTL_T(KC_NO)
 
-// KC_NO ist der Tap-Platzhalter; case WIN_BSP in process_record_user() sendet
-// beim Tippen Option+Backspace. Beim Halten aktiviert LT den WINDOW-Layer.
+// KC_NO is the tap placeholder; case WIN_BSP in process_record_user() sends
+// Option+Backspace on tap. LT activates the WINDOW layer while held.
 #define WIN_BSP LT(_WINDOW, KC_NO)
 
-/* Diagramm-Legende: Tap/Hold zeigt Tippen/Halten, TRNS ist transparent.
- * LCmd/RCmd entsprechen den GUI-Modifiern unter macOS.
- * Hyper ist linker Ctrl+Alt+Cmd+Shift; Spotlight sendet Cmd+Space.
- * Sticky Shift gilt nach dem Tippen fuer die naechste Taste, gehalten als Shift.
- * Symbolbeschriftungen benennen QMK-Keycodes, nicht verifizierte EurKEY-next-Ausgaben.
- * NUHS/NUBS sind die ISO-Keycodes, S(...) bezeichnet Shift.
- * Alle fuenf Reihen haben zwoelf einzelne 1u-Tasten.
+/* Diagram legend: Tap/Hold indicates tap/hold actions; TRNS is transparent.
+ * LCmd/RCmd are the GUI modifiers on macOS.
+ * Hyper is left Ctrl+Alt+Cmd+Shift; Spotlight sends Cmd+Space.
+ * Sticky Shift applies to the next key when tapped and acts as Shift while held.
+ * Symbol labels identify QMK keycodes, not verified EurKEY-next output characters.
+ * NUHS/NUBS are the ISO keycodes; S(...) indicates Shift.
+ * All five rows have twelve individual 1u keys.
  */
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -72,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   CTL_SPOT,        KC_LALT,  KC_LBRC,  KC_RBRC,  LT(_LOWER, KC_BSPC),  KC_ENT,  WIN_BSP,  LT(_RAISE, KC_SPC),  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RGHT
 ),
 
-/* Gaming (vorerst transparent; noch keine Umschalttaste)
+/* Gaming (transparent placeholder; no layer-switch key assigned yet)
  * +------+------+------+------+------+------+------+------+------+------+------+------+
  * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +------+------+------+------+------+------+------+------+------+------+------+------+
@@ -156,7 +156,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   BACKLIT,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 ),
 
-/* Window (vorerst transparent; Opt-Bksp halten)
+/* Window (transparent placeholder; hold Opt-Bksp)
  * +------+------+------+------+------+------+------+------+------+------+------+------+
  * | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS | TRNS |
  * +------+------+------+------+------+------+------+------+------+------+------+------+

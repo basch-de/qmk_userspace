@@ -86,6 +86,9 @@ Neue Features bei Bedarf auch in `config.h` und `rules.mk` konfigurieren.
 Kommentare sollen besondere Entscheidungen und nicht offensichtliches
 Verhalten erklären.
 
+Quelltext, Bezeichner und alle Kommentare in Quelldateien sowie `config.h`
+und `rules.mk` auf Englisch verfassen. Die Kommunikation bleibt auf Deutsch.
+
 # Builds und Prüfung
 
 Kompiliert wird ausschließlich online über GitHub Actions mit der dort
