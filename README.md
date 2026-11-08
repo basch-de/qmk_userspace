@@ -41,6 +41,13 @@ firmware and userspace revisions, submodules, compiler, Python packages,
 build logs, and firmware checksums. These are uploaded as `provenance-<variant>`
 artifacts, including available logs when compilation fails.
 
+The container is selected from official QMK's `latest` image and pinned by
+its verified registry manifest digest. See [container selection and updates](docs/build-container.md).
+As in QMK's own userspace workflow, Python dependencies are installed from the
+checked-out firmware's `requirements.txt`; the resulting versions are recorded
+with `pip freeze`. The fixed image alone does not freeze the Python environment
+after that installation.
+
 Download the firmware from **Actions → Build QMK firmware → run → Artifacts**.
 The existing personal Preonic `latest` release is refreshed on `main`,
 independently of the other variants' build success. A missing personal Preonic
