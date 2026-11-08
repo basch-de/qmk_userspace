@@ -109,6 +109,8 @@ Die Diagramme direkt über den QMK-Layern zeigen jede physische Position.
 - NUMPAD verwendet normale Ziffern und Operatoren wie die Vorlage, keine
   abweichenden HID-Keypad-Keycodes. Komma/Punkt ist Tap/Hold, kein Shift-Mod-Morph.
 - `win` ist der vorhandene macOS-Fenster-Shortcut-Layer, kein Windows-/Xbox-Layer.
+- SHORT, dritte Reihe, rechte zweite Taste: `KC_ASST` (QMK Assistant).
+- SYS oben rechts: `KC_PWR` (QMK System Power).
 - SYS unten links: `QK_RBT`, `QK_BOOT`, `EE_CLR`; unten rechts gespiegelt:
   `EE_CLR`, `QK_BOOT`, `QK_RBT`. Die beiden `EE_CLR`-Positionen waren in ZMK frei.
 
@@ -157,8 +159,8 @@ Ein gehaltener Punkt wird als Key-down/Key-up gesendet und kann am Host wiederho
 | Mehrere gleichhändige HRMs | QMK erlaubt bestimmte gestapelte Mod-Tap-Chords trotz Handregel; das ist keine exakte Nachbildung der ZMK-Triggerliste. | Chords praktisch testen; gegebenenfalls einen dokumentierten alternativen HRM-Ansatz wählen. |
 | Quick Tap | QMK begrenzt Quick Tap auf den Tapping Term und unterscheidet sich bei Wiederholungs-/Unterbrechungsfolgen von ZMK. Die ZMK-Werte 200/250 werden deshalb nicht unverändert übernommen. | Eigene QMK-Werte nach Repeat-Tests abstimmen. |
 | Caps Word | Toggle, unbegrenzte Leerlaufdauer, Buchstaben, auch implizit geshiftete Ziffern, Unterstrich, Backspace und Delete sind übernommen. Deaktivierte Tasten verändern den Zustand nicht. Ein normaler Bindestrich beendet Caps Word wie in ZMK; Shift setzt es fort. QMK beendet Caps Word beim Aktivieren von Ctrl/Cmd/linkem Alt, während ZMK reine Modifier passieren lässt. | Dokumentiertes Standard-QMK-Verhalten akzeptieren; keine Umgehung der Tastenverarbeitung. |
-| `C_VOICE_COMMAND` | SHORT, dritte Reihe, rechte zweite Taste: deaktiviert. ZMK sendet Consumer Usage `0xCF`; QMK `KC_ASST` sendet stattdessen `0x1CB` und wäre kein gleichwertiger Port. | Nach Absprache einen in macOS konfigurierten Shortcut oder `KC_ASST` verwenden. |
-| `C_PWR` | SYS oben rechts: deaktiviert. ZMK nutzt Consumer Power `0x30`; QMK `KC_PWR` nutzt System Power und hat andere Semantik. | Explizit gewünschten macOS-Energie-Shortcut oder bewusst System Power festlegen. |
+| `C_VOICE_COMMAND` | Auf Nutzerauftrag durch QMK `KC_ASST` (Assistant) an derselben Position ersetzt. ZMK sendet Consumer Usage `0xCF`; QMK sendet `0x1CB`. Damit ist die Taste belegt, aber die HID-Aktion unterscheidet sich. | Hostwirkung unter macOS prüfen; bei Bedarf einen dort konfigurierten Shortcut festlegen. |
+| `C_PWR` | Auf Nutzerauftrag durch QMK `KC_PWR` (System Power) an derselben Position ersetzt. ZMK nutzt Consumer Power `0x30`; QMK nutzt System Power mit anderer Semantik. | Gewählte System-Power-Aktion bewusst am Host prüfen. |
 | Bluetooth / externe Versorgung | Die fünf Profilplätze, BT-Clear und External-Power-Toggle bleiben deaktiviert; diese kabelgebundene RP2040-Definition stellt die ZMK-Funktionen nicht bereit. | Keine Firmware-Nachbildung; gegebenenfalls geeignete Hardware wählen. |
 | Studio | `studio_unlock` bleibt deaktiviert. | Änderungen in der versionierten QMK-Keymap. |
 | RGB / Schlafen | Hersteller-RGB-Matrix und Encoder erhalten; SYS steuert RGB Matrix. Persönliche Defaults: Hue 142, Sat 250, Value 51; fünf Minuten RGB-Leerlaufabschaltung, Helligkeitsschritt 13. Herstellerlimit 100/255 bleibt bestehen. ZMK-Effekte, Wireless-Deep-Sleep nach 30 Minuten und BLE-Energieverwaltung werden nicht nachgebildet. | Standard-RGB-Matrix-Effekte am Gerät auswählen; Defaults gelten nur ohne gespeicherte Einstellungen. |

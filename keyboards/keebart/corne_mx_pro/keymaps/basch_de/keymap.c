@@ -83,13 +83,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* short
  * | NO |        NO        |        NO        |        NO        |           NO           |        NO        | NO | NO |  NO  |    NO   |         NO         |    NO   | NO | LCTL(LGUI(KC_Q)) |
  * | NO |        NO        |        NO        | LSFT(LGUI(KC_4)) | LCTL(LSFT(LGUI(KC_4))) |        NO        | NO | NO |  NO  | KC_VOLD |      KC_MUTE       | KC_VOLU | NO |        NO        |
- * | NO | LSFT(LGUI(KC_O)) | LSFT(LGUI(KC_M)) | LSFT(LGUI(KC_K)) |           NO           | LSFT(LGUI(KC_H)) |         |  NO  |    NO   | LCTL(LGUI(KC_SPC)) |    NO   | NO |        NO        |
+ * | NO | LSFT(LGUI(KC_O)) | LSFT(LGUI(KC_M)) | LSFT(LGUI(KC_K)) |           NO           | LSFT(LGUI(KC_H)) |         |  NO  | KC_ASST | LCTL(LGUI(KC_SPC)) |    NO   | NO |        NO        |
  *                                            |       TRNS       |          TRNS          |       TRNS       |         | TRNS |   TRNS  |        TRNS        |
  */
 [_SHORT] = LAYOUT_split_3x6_3_ex2(
     KC_NO,  KC_NO,             KC_NO,             KC_NO,             KC_NO,                   KC_NO,             KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,               KC_NO,    KC_NO,  LCTL(LGUI(KC_Q)),
     KC_NO,  KC_NO,             KC_NO,             LSFT(LGUI(KC_4)),  LCTL(LSFT(LGUI(KC_4))),  KC_NO,             KC_NO,  KC_NO,  KC_NO,    KC_VOLD,  KC_MUTE,             KC_VOLU,  KC_NO,  KC_NO,
-    KC_NO,  LSFT(LGUI(KC_O)),  LSFT(LGUI(KC_M)),  LSFT(LGUI(KC_K)),  KC_NO,                   LSFT(LGUI(KC_H)),                  KC_NO,    KC_NO,    LCTL(LGUI(KC_SPC)),  KC_NO,    KC_NO,  KC_NO,
+    KC_NO,  LSFT(LGUI(KC_O)),  LSFT(LGUI(KC_M)),  LSFT(LGUI(KC_K)),  KC_NO,                   LSFT(LGUI(KC_H)),                  KC_NO,    KC_ASST,  LCTL(LGUI(KC_SPC)),  KC_NO,    KC_NO,  KC_NO,
                                                   _______,           _______,                 _______,                           _______,  _______,  _______
 ),
 
@@ -107,13 +107,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 /* sys
- * |   NO   |    NO   |   NO   | NO | NO | NO | NO | NO |    NO   |    NO   |    NO   |    NO   |    NO   |    NO   |
+ * |   NO   |    NO   |   NO   | NO | NO | NO | NO | NO |    NO   |    NO   |    NO   |    NO   |    NO   | KC_PWR  |
  * |   NO   |    NO   |   NO   | NO | NO | NO | NO | NO | RM_HUED | RM_HUEU | RM_SATD | RM_SATU | RM_VALD | RM_VALU |
  * | QK_RBT | QK_BOOT | EE_CLR | NO | NO | NO |         | RM_TOGG | RM_NEXT |    NO   |  EE_CLR | QK_BOOT |  QK_RBT |
  *                             | NO | NO | NO |         |    NO   |    NO   |    NO   |
  */
 [_SYS] = LAYOUT_split_3x6_3_ex2(
-    KC_NO,   KC_NO,    KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,
+    KC_NO,   KC_NO,    KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_PWR,
     KC_NO,   KC_NO,    KC_NO,   KC_NO,  KC_NO,  KC_NO,  KC_NO,  KC_NO,  RM_HUED,  RM_HUEU,  RM_SATD,  RM_SATU,  RM_VALD,  RM_VALU,
     QK_RBT,  QK_BOOT,  EE_CLR,  KC_NO,  KC_NO,  KC_NO,                  RM_TOGG,  RM_NEXT,  KC_NO,    EE_CLR,   QK_BOOT,  QK_RBT,
                                 KC_NO,  KC_NO,  KC_NO,                  KC_NO,    KC_NO,    KC_NO

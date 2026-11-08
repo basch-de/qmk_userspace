@@ -17,7 +17,7 @@ The adapter exposes the compiled encoder table without emulating encoder
 hardware. Test fixtures load the actual compiled keymap into QMK's standard
 per-test keymap facility. Matrix scanning, tapping, layers, user callbacks,
 Caps Word and keyboard report generation use real QMK code. GPIO, time, EEPROM
-and USB transport use QMK's native test backends. System reset/boot/EEPROM-clear
+and USB transport use QMK's native test backends. System power/reset/boot/EEPROM-clear
 bindings are inspected as data and never pressed in these tests.
 
 Coverage includes:

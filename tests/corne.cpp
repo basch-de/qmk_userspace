@@ -27,9 +27,11 @@ TEST_F(Corne, PhysicalStructureAndCriticalLayerAccess) {
     for (unsigned i = 0; i < 6; ++i) EXPECT_EQ(code(40 + i), thumbs[i]);
     EXPECT_EQ(code(33, SYM), TG(NUMPAD));
     EXPECT_EQ(code(33, NUMPAD), TG(NUMPAD));
+    EXPECT_EQ(code(35, SHORT), KC_ASST);
 }
 
 TEST_F(Corne, SystemActionsAreSymmetricAndConfinedToSys) {
+    EXPECT_EQ(code(13, SYS), KC_PWR);
     for (auto pair : {std::make_pair(28u, 39u), {29u, 38u}, {30u, 37u}}) {
         auto expected = pair.first == 28 ? QK_RBT : pair.first == 29 ? QK_BOOT : EE_CLR;
         EXPECT_EQ(code(pair.first, SYS), expected);
