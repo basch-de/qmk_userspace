@@ -135,6 +135,18 @@ Herstellerbelegung geprüft:
   Userspace-Commit `a156ac1f`.
 - [Preonic am selben Stand erfolgreich](https://github.com/basch-de/qmk_userspace/actions/runs/42490114445).
 
+Auch die vollständige Portierung an Commit `d78254a3` wurde online erfolgreich
+kompiliert:
+
+| Prüfung | Ergebnis |
+| --- | --- |
+| [Corne `default` und `basch_de`](https://github.com/basch-de/qmk_userspace/actions/runs/42494150245) | Beide Matrix-Jobs erfolgreich, beide UF2-Artefakte vorhanden |
+| [Preonic einschließlich bestehendem Publish-Job](https://github.com/basch-de/qmk_userspace/actions/runs/42494150831) | Erfolgreich, unabhängig vom Corne-Workflow |
+
+UF2-Artefakte dieses geprüften Portierungsstands:
+[persönliche Keymap](https://github.com/basch-de/qmk_userspace/actions/runs/42494150245/artifacts/13622721652)
+und [Herstellerbelegung](https://github.com/basch-de/qmk_userspace/actions/runs/42494150245/artifacts/13622148764).
+
 Für die persönliche Portierung wurden alle **368 Layerpositionen** statisch mit
 der gepinnten ZMK-Quelldatei verglichen, einschließlich der ausdrücklich oben
 aufgeführten Ausnahmen. Zusätzlich wurden Layoutgröße, eindeutige Matrixpositionen,
