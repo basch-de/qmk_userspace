@@ -3,3 +3,5 @@ DIP_SWITCH_ENABLE = no
 
 # No physical encoder installed.
 ENCODER_ENABLE = no
+
+SRC += behaviors.c

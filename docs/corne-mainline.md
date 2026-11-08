@@ -49,8 +49,10 @@ die Hersteller-Keymaps als Hardware-Referenzen ohne persönliche Keymap-Dateien.
 Alle vier Varianten laufen
 mit `fail-fast: false`; jeder Job kompiliert ausschließlich sein explizites
 Target mit `qmk mass-compile`. Die versionierte `qmk.json` wird nicht verändert.
-Nur die Corne-Jobs installieren das Hardware-Overlay. Die Preonic-Keymap,
-`config.h` und `rules.mk` bleiben unverändert.
+Nur die Corne-Jobs installieren das Hardware-Overlay. Beide persönlichen
+Keymaps trennen Belegung und Diagramme (`keymap.c`) von der Verhaltenslogik
+(`behaviors.c`); gemeinsame Layernamen und Dual-Role-Aliase stehen jeweils in
+`keymap_defs.h`. Diese Aufteilung ändert weder Belegung noch Verhalten.
 
 Pro Lauf wird der aktuelle Mainline-`master` einmal für alle vier Varianten
 aufgelöst. Es gibt keinen dauerhaften Firmware-Commit-Pin mehr.

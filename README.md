@@ -72,5 +72,9 @@ not replace physical testing of tap/hold behavior, host output, or peripherals.
 - Corne hardware and manufacturer baseline: `vendor/qmk/`.
 - Repository instructions: [AGENTS.md](AGENTS.md).
 
+Both personal keymap directories separate bindings and diagrams (`keymap.c`)
+from behavior hooks (`behaviors.c`). Shared layer names and dual-role aliases
+live in `keymap_defs.h`; `rules.mk` compiles the behavior source separately.
+
 Keep each keymap's physical matrix and diagrams aligned. Changes for one
 keyboard must preserve the other keyboard's configuration and build behavior.

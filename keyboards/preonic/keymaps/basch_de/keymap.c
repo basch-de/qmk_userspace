@@ -15,23 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
-
-enum preonic_layers {
-  _QWERTY,
-  _GAMING,
-  _LOWER,
-  _RAISE,
-  _ADJUST,
-  _WINDOW
-};
-
-// KC_NO is the tap placeholder; case CTL_SPOT in process_record_user() sends
-// Cmd+Space on tap. LCTL_T provides left Ctrl while held.
-#define CTL_SPOT LCTL_T(KC_NO)
-
-// KC_NO is the tap placeholder; case WIN_BSP in process_record_user() sends
-// Option+Backspace on tap. LT activates the WINDOW layer while held.
-#define WIN_BSP LT(_WINDOW, KC_NO)
+#include "keymap_defs.h"
 
 /* Diagram legend: Tap/Hold indicates tap/hold actions; TRNS is transparent.
  * LCmd/RCmd are the GUI modifiers on macOS.
@@ -169,30 +153,4 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______
 )
 
-};
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-        case CTL_SPOT:
-          if (record->tap.count) {
-            if (record->event.pressed) {
-              tap_code16(LGUI(KC_SPC));
-            }
-            return false;
-          }
-          break;
-        case WIN_BSP:
-          if (record->tap.count) {
-            if (record->event.pressed) {
-              tap_code16(LALT(KC_BSPC));
-            }
-            return false;
-          }
-          break;
-      }
-    return true;
 };

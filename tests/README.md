@@ -7,8 +7,10 @@ continue to serve as independent firmware compilation baselines.
 
 `prepare.py` creates `tests/basch_corne` or `tests/basch_preonic` inside the
 disposable Actions firmware checkout. It uses QMK's own metadata and keyboard
-header generators, copies the production keymap/config/rules without editing
-them, and installs a host-only adapter plus our tests. QMK discovers these
+header generators, copies the production keymap, behaviors, shared definitions,
+config and rules without editing them, and installs a host-only adapter plus
+our tests. The production rules compile `behaviors.c` as a separate source file,
+just as in the firmware builds. QMK discovers these
 test suites normally; no QMK core source or existing tests are patched.
 
 The adapter exposes the compiled encoder table without emulating encoder

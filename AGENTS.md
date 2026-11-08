@@ -33,7 +33,9 @@ einem gemeinsamen QMK External Userspace. Beide verwenden die Keymap `basch_de`.
 nicht beeinträchtigen.
 
 Wichtige Dateien:
-- `keymap.c`: Tastenbelegung, Layer und eigene Logik
+- `keymap.c`: Tastenbelegung, Diagramme und gegebenenfalls Encoderbelegung
+- `behaviors.c`: eigene Verhaltenslogik und QMK-Hooks je Tastatur
+- `keymap_defs.h`: gemeinsame Layernamen und Dual-Role-Aliase je Tastatur
 - `config.h`: QMK-Einstellungen
 - `rules.mk`: Features und zusätzliche Quelldateien
 - `qmk.json`: Build-Targets

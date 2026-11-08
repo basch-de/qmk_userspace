@@ -48,7 +48,13 @@ def main():
         shutil.copyfile(metadata_path, Path(os.environ["BUILD_INFO"]) / "test-hardware.json")
     keymap_keyboard = "preonic" if keyboard == "preonic/rev3_drop" else "keebart/corne_mx_pro"
     source = ROOT / "keyboards" / keymap_keyboard / "keymaps/basch_de"
-    for name, output in [("keymap.c", "production_keymap.c"), ("config.h", "production_config.h"), ("rules.mk", "production_rules.mk")]:
+    for name, output in [
+        ("keymap.c", "production_keymap.c"),
+        ("behaviors.c", "behaviors.c"),
+        ("keymap_defs.h", "keymap_defs.h"),
+        ("config.h", "production_config.h"),
+        ("rules.mk", "production_rules.mk"),
+    ]:
         shutil.copyfile(source / name, destination / output)
     shutil.copyfile(ROOT / "tests/fixture.hpp", destination / "fixture.hpp")
     shutil.copyfile(ROOT / ("tests/corne.cpp" if flag == "TEST_CORNE" else "tests/preonic.cpp"), destination / "test_userspace.cpp")
@@ -58,8 +64,9 @@ def main():
         f'#undef MATRIX_ROWS\n#define MATRIX_ROWS {rows}\n'
         f'#undef MATRIX_COLS\n#define MATRIX_COLS {cols}\n'
         '#include "production_config.h"\n'
+        '#define QMK_KEYBOARD_H "test_keyboard.h"\n'
     )
-    adapter = '// SPDX-License-Identifier: GPL-2.0-or-later\n#include "test_keyboard.h"\n#define QMK_KEYBOARD_H "test_keyboard.h"\n'
+    adapter = '// SPDX-License-Identifier: GPL-2.0-or-later\n#include "test_keyboard.h"\n'
     if flag == "TEST_CORNE":
         encoders = len(metadata["encoder"]["rotary"]) + len(metadata["split"]["encoder"]["right"]["rotary"])
         if encoders != 4:
