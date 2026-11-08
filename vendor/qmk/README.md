@@ -27,7 +27,8 @@ I2C/encoder pin assignments; optional peripherals must match the installed hardw
 The shared `.github/workflows/build.yml` follows official Mainline QMK `master`.
 Each run resolves that branch once and uses the same commit for all four
 Preonic and Corne variants. Firmware is not permanently pinned; the build
-container remains fixed by digest. This hardware overlay remains versioned
+container follows `ghcr.io/qmk/qmk_cli:latest`, as in official QMK's userspace
+workflow. This hardware overlay remains versioned
 in the userspace repository and is not fetched from Keebart during the build.
 
 The manufacturer default keymap passed the first integration stage before the

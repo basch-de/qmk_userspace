@@ -23,8 +23,9 @@ Actions-Checkout ergänzt. Es werden keine Vial-/Studio-Komponenten eingebunden.
 
 Beide Tastaturen verwenden den offiziellen QMK-Branch `master`. Wie im
 Studio-Projekt wird dieser einmal je Workflow-Lauf aufgelöst; alle vier
-Buildvarianten verwenden anschließend denselben Commit. Nur das Build-Image
-bleibt per Digest festgelegt. Das versionierte Keebart-Hardware-Overlay wird
+Buildvarianten verwenden anschließend denselben Commit. Der Build-Container
+folgt wie im offiziellen QMK-Workflow `ghcr.io/qmk/qmk_cli:latest`, ohne
+Digest-Pin. Das versionierte Keebart-Hardware-Overlay wird
 weiterhin aus diesem Repository übernommen.
 
 ## Aufbau und unabhängige Builds
@@ -37,8 +38,9 @@ weiterhin aus diesem Repository übernommen.
 | `keebart/corne_mx_pro/standard` | `basch_de` | `build.yml`, Variante `corne-personal` |
 
 Der gemeinsame Workflow `.github/workflows/build.yml` folgt dem Buildmuster
-des Studio-Projekts: unabhängige Matrix-Jobs, ein festgelegtes Container-Image,
-ein isolierter Hersteller-Userspace und getrennte Firmware-/Provenance-Artefakte.
+des Studio-Projekts: unabhängige Matrix-Jobs, isolierte Hersteller-Userspaces
+und getrennte Firmware-/Provenance-Artefakte. Die Container-Auswahl folgt dem
+offiziellen QMK-Workflow mit `latest`.
 Firmware-Basis bleibt offizielles Mainline-QMK. Die bisherigen zwei Workflows
 wurden durch diese eine Datei ersetzt.
 

@@ -169,12 +169,11 @@ Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
   Alle vier Varianten verwenden denselben pro Lauf aufgelösten QMK-Commit.
 - Firmware und Provenance werden je Variante als Actions-Artefakte gespeichert:
   QMK-/Userspace-Revisionen, Submodule, Compiler, Python-Pakete, Buildlog und
-  Firmware-Prüfsumme. Der QMK-Container ist per Digest festgelegt.
-- Den Build-Container aus dem offiziellen `ghcr.io/qmk/qmk_cli:latest` auswählen,
-  dessen Manifest-Digest und Runner-Plattform prüfen und alle vier Varianten
-  online validieren. Herkunft und Aktualisierungsverfahren stehen in
-  `docs/build-container.md`. Einen Digest nicht ungeprüft aus anderen Projekten
-  übernehmen. Python-Abhängigkeiten werden wie im offiziellen QMK-Workflow aus
+  Firmware-Prüfsumme. Der QMK-Container folgt dem offiziellen Tag `latest`.
+- Wie im offiziellen QMK-Workflow `ghcr.io/qmk/qmk_cli:latest` verwenden;
+  keinen Container-Digest ohne Auftrag festschreiben. Details stehen in
+  `docs/build-container.md`. Python-Abhängigkeiten werden wie im offiziellen
+  QMK-Workflow aus
   den `requirements.txt` des verwendeten Firmware-Commits installiert; ihre
   tatsächlich verwendeten Versionen stehen im Provenance-Artefakt.
 - Die persönliche Preonic-Keymap behält ihr `Firmware`-Artefakt und die

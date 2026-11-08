@@ -36,8 +36,7 @@ jobs:
     needs: firmware-revision
     runs-on: ubuntu-latest
     timeout-minutes: 40
-    # Selected from the official QMK latest image; see docs/build-container.md.
-    container: ghcr.io/qmk/qmk_cli@sha256:b7d7fa8fb4432b569931de5ad59098cb788f440ed61a62c5126746b71aee0f4a
+    container: ghcr.io/qmk/qmk_cli:latest
     strategy:
       fail-fast: false
       matrix:

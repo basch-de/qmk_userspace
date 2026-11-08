@@ -28,25 +28,25 @@ Like the Studio project, each run resolves the current firmware branch once
 and uses that exact commit for every variant. Here the source is official QMK
 `master`; firmware is not permanently pinned to a commit. A new upstream commit
 is picked up on the next push, pull request, or manual run and does not itself
-trigger a build in this repository. The build container remains fixed by digest.
+trigger a build in this repository. The build container follows official QMK's
+`ghcr.io/qmk/qmk_cli:latest` tag.
 
 Each job compiles only its selected target with `qmk mass-compile`. A failure
 in one variant does not cancel the other builds. Both manufacturer keymaps
 use separate userspaces without personal keymap files. Only the Corne jobs
 install the hardware overlay; the versioned `qmk.json` is left unchanged.
 
-Like the Studio project's build structure, the workflow uses a fixed QMK
-container image and records provenance separately for every variant:
+The workflow records provenance separately for every variant:
 firmware and userspace revisions, submodules, compiler, Python packages,
 build logs, and firmware checksums. These are uploaded as `provenance-<variant>`
 artifacts, including available logs when compilation fails.
 
-The container is selected from official QMK's `latest` image and pinned by
-its verified registry manifest digest. See [container selection and updates](docs/build-container.md).
+The container uses `ghcr.io/qmk/qmk_cli:latest` directly, as in the official QMK
+userspace workflow. See [build container behavior](docs/build-container.md).
 As in QMK's own userspace workflow, Python dependencies are installed from the
 checked-out firmware's `requirements.txt`; the resulting versions are recorded
-with `pip freeze`. The fixed image alone does not freeze the Python environment
-after that installation.
+with `pip freeze`. Both the image tag and the resulting Python environment can
+change between builds.
 
 Download the firmware from **Actions → Build QMK firmware → run → Artifacts**.
 The existing personal Preonic `latest` release is refreshed on `main`,
