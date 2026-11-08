@@ -46,7 +46,7 @@ jobs:
             keymap: basch_de
             overlay: userspace
             extension: bin
-            artifact: Firmware
+            artifact: preonic-basch_de
             corne: false
           - variant: preonic-default
             keyboard: preonic/rev3_drop
@@ -163,40 +163,3 @@ jobs:
           name: provenance-${{ matrix.variant }}
           path: build-info/
           if-no-files-found: warn
-
-  publish:
-    name: Publish Preonic firmware
-    needs: build
-    if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout userspace
-        uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
-      # Other variant failures do not prevent publication. Missing personal
-      # Preonic firmware fails this step and leaves the previous release intact.
-      - name: Download Preonic firmware
-        uses: actions/download-artifact@v8
-        with:
-          name: Firmware
-          path: release-firmware
-
-      - name: Replace previous release
-        run: gh release delete latest --cleanup-tag --yes || true
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Publish latest Preonic firmware
-        uses: softprops/action-gh-release@v3
-        with:
-          token: ${{ github.token }}
-          name: Latest QMK Firmware
-          tag_name: latest
-          fail_on_unmatched_files: true
-          draft: false
-          prerelease: false
-          files: release-firmware/*.bin

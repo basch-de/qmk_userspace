@@ -23,8 +23,9 @@ verwendeten Paketversionen dokumentiert `pip freeze` im Provenance-Artefakt.
 
 Die vier Varianten werden ausschließlich über GitHub Actions kompiliert:
 Preonic `default` und `basch_de`, Corne `default` und `basch_de`.
-Firmware-Artefakte und die persönliche Preonic-Veröffentlichung werden zusätzlich
-geprüft. Ein erfolgreicher Build bestätigt Kompilierbarkeit; Hardwaretests
+Firmware- und Provenance-Artefakte werden auf Vollständigkeit geprüft.
+Es werden keine Releases oder Tags veröffentlicht.
+Ein erfolgreicher Build bestätigt Kompilierbarkeit; Hardwaretests
 bleiben davon getrennt. Es gibt keine Flash- oder EEPROM-Reset-Schritte.
 
 Jede Variante liefert ein Provenance-Artefakt mit Firmware-/Userspace-Revision,

@@ -19,7 +19,7 @@ pull requests, and manual starts. Its four independent matrix jobs build:
 
 | Variant | Firmware reference | Artifact |
 | --- | --- | --- |
-| `preonic-personal` | Official QMK `master`, resolved once per run | `Firmware` (BIN) |
+| `preonic-personal` | Official QMK `master`, resolved once per run | `preonic-basch_de` (BIN) |
 | `preonic-default` | Same resolved official QMK commit | `preonic-default` (BIN) |
 | `corne-standard-default` | Same resolved official QMK commit | `corne-standard-default` (UF2) |
 | `corne-personal` | Same resolved official QMK commit | `corne-standard-basch_de` (UF2) |
@@ -49,10 +49,11 @@ with `pip freeze`. Both the image tag and the resulting Python environment can
 change between builds.
 
 Download the firmware from **Actions → Build QMK firmware → run → Artifacts**.
-The existing personal Preonic `latest` release is refreshed on `main`,
-independently of the other variants' build success. A missing personal Preonic
-artifact leaves the previous release intact. The Preonic `default` build is
-provided as an Actions artifact. Pull requests do not publish releases.
+All variants are provided exclusively as Actions artifacts, with no automatic
+release or tag publication. Successful variants upload their artifacts even
+when another variant fails. Any existing legacy Preonic `latest` release is a
+historical build and is no longer updated; use the selected Actions run for
+current firmware. Artifact availability follows the repository's retention policy.
 
 All firmware compilation takes place in GitHub Actions. The workflow does not
 flash devices, clear EEPROM, or delete device flash. Compilation success does

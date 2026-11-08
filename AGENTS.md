@@ -176,13 +176,13 @@ Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
   QMK-Workflow aus
   den `requirements.txt` des verwendeten Firmware-Commits installiert; ihre
   tatsächlich verwendeten Versionen stehen im Provenance-Artefakt.
-- Die persönliche Preonic-Keymap behält ihr `Firmware`-Artefakt und die
-  Veröffentlichung unter `latest` auf `main`. Fehler der anderen Varianten
-  verhindern diese Veröffentlichung nicht; ohne persönliches Preonic-Artefakt
-  bleibt die vorherige Veröffentlichung erhalten. Preonic `default` wird als
-  separates `preonic-default`-BIN-Artefakt bereitgestellt.
+- Alle Varianten liefern ausschließlich Actions-Artefakte: `preonic-default`,
+  `preonic-basch_de`, `corne-standard-default`, `corne-standard-basch_de` und
+  jeweils `provenance-<variant>`. Erfolgreiche Varianten liefern ihre Artefakte
+  unabhängig von Fehlern anderer Varianten. Keine Sonderbehandlung der Preonic.
 - Pushes, Pull Requests und manuelle Starts nutzen denselben Workflow.
-  Pull Requests veröffentlichen keine Releases. Keine Flash-Schritte ergänzen.
+  Keine Releases oder Tags automatisch erstellen oder aktualisieren.
+  Keine Flash-Schritte ergänzen.
 
 Bei Änderungen der Corne-Hardwaredefinition zuerst die Herstellerbelegung
 `default` gegen Mainline-QMK prüfen, bevor die persönliche Keymap auf die

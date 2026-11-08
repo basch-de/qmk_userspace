@@ -59,7 +59,7 @@ Push, Pull Request oder manuelle Start übernimmt den dann aktuellen Stand.
 
 Erwartete Firmware-Artefakte:
 
-- `Firmware`: Preonic-BIN, mit der bisherigen Veröffentlichung kompatibel.
+- `preonic-basch_de`: BIN der persönlichen Preonic-Keymap.
 - `preonic-default`: BIN der originalen Mainline-Preonic-Standardbelegung.
 - `corne-standard-default`: UF2 der Herstellerbelegung.
 - `corne-standard-basch_de`: UF2 der persönlichen Corne-Keymap.
@@ -69,12 +69,13 @@ Submodulen, Compiler, Python-Paketen, Buildlog und Firmware-Prüfsumme hinzu.
 Auch bei fehlgeschlagener Kompilierung werden vorhandene Logs hochgeladen.
 Im Actions-Tab den Lauf **Build QMK firmware** und dessen **Artifacts** öffnen.
 
-Die Veröffentlichung der persönlichen Preonic-Keymap unter `latest` bleibt
-auf `main` erhalten. Sie wartet auf den Abschluss der Matrix, wird aber auch
-bei fehlgeschlagenen anderen Varianten ausgeführt. Ohne erfolgreich
-hochgeladenes persönliches Preonic-Artefakt wird die
-vorherige Veröffentlichung nicht gelöscht. Pull Requests veröffentlichen keine
-Releases. Corne-Firmware bleibt als unabhängiges Actions-Artefakt verfügbar.
+Alle vier Varianten werden gleichberechtigt ausschließlich als Actions-
+Artefakte bereitgestellt. Erfolgreiche Varianten liefern ihre Dateien auch bei
+Fehlern anderer Varianten. Es gibt keinen Publish-Job und keine automatische
+Release- oder Tag-Veröffentlichung mehr. Ein vorhandener alter Preonic-Release
+`latest` bleibt ein historischer Stand und wird nicht weiter aktualisiert.
+Aktuelle Firmware und Buildnachweise stehen beim jeweiligen Actions-Lauf;
+ihre Verfügbarkeit unterliegt der Aufbewahrungsrichtlinie des Repositories.
 
 Es wurde kein lokaler Firmware-Build ausgeführt. Alle Firmware-Builds finden
 in GitHub Actions statt. Es wurden keine anderen Repositories verändert.
@@ -172,7 +173,7 @@ kompiliert:
 | Prüfung | Ergebnis |
 | --- | --- |
 | [Corne `default` und `basch_de`](https://github.com/basch-de/qmk_userspace/actions/runs/42494150245) | Beide Matrix-Jobs erfolgreich, beide UF2-Artefakte vorhanden |
-| [Preonic einschließlich bestehendem Publish-Job](https://github.com/basch-de/qmk_userspace/actions/runs/42494150831) | Erfolgreich, unabhängig vom Corne-Workflow |
+| [Preonic einschließlich damaligem Publish-Job](https://github.com/basch-de/qmk_userspace/actions/runs/42494150831) | Erfolgreich, unabhängig vom Corne-Workflow |
 
 UF2-Artefakte dieses geprüften Portierungsstands:
 [persönliche Keymap](https://github.com/basch-de/qmk_userspace/actions/runs/42494150245/artifacts/13622721652)
