@@ -1,5 +1,10 @@
 # QMK Userspace
 
+Personal keymaps: Preonic Drop rev3 and Keebart Corne MX Pro Standard.
+See [Corne Mainline migration notes](docs/corne-mainline.md) for the hardware
+overlay, independent Actions builds, ZMK behavior mapping, and hardware test list.
+This project compiles firmware exclusively through GitHub Actions.
+
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
 
 ## Howto configure your build targets

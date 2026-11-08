@@ -28,5 +28,6 @@ The Corne workflow uses official Mainline QMK commit
 `d194c077ed964195ec16d255c7a4b89a794cf03b`. The existing Preonic workflow retains
 its own Mainline `master` reference.
 
-The first integration stage builds only the manufacturer default keymap.
-A successful Actions run is required before the personal keymap port begins.
+The manufacturer default keymap passed the first integration stage before the
+personal port began. See [migration notes](../../docs/corne-mainline.md) for
+the build evidence, source mapping, and remaining behavior differences.

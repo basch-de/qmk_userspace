@@ -6,14 +6,19 @@ on:
       - '.github/workflows/build_corne.yaml'
       - 'vendor/qmk/**'
       - 'keyboards/keebart/**'
+      - 'qmk.json'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  standard:
-    name: Corne standard / default
+  build:
+    name: Corne standard / ${{ matrix.keymap }}
+    strategy:
+      fail-fast: false
+      matrix:
+        keymap: [default, basch_de]
     runs-on: ubuntu-latest
     container: ghcr.io/qmk/qmk_cli:latest
     steps:
@@ -40,13 +45,13 @@ jobs:
           qmk config user.overlay_dir="$GITHUB_WORKSPACE"
           git -C qmk_firmware rev-parse HEAD >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Compile manufacturer standard keymap
-        run: qmk compile -kb keebart/corne_mx_pro/standard -km default
+      - name: Compile selected keymap
+        run: qmk compile -kb keebart/corne_mx_pro/standard -km ${{ matrix.keymap }}
 
-      - name: Upload standard UF2
+      - name: Upload UF2
         uses: actions/upload-artifact@v7
         with:
-          name: corne-standard-default
+          name: corne-standard-${{ matrix.keymap }}
           path: |
             *.uf2
             qmk_firmware/*.uf2
