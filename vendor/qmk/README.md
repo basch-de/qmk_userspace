@@ -24,9 +24,11 @@ RGB Matrix layout, OLED and encoder configuration are retained from the source.
 Hardware verification is still required, including the manufacturer's shared
 I2C/encoder pin assignments; optional peripherals must match the installed hardware.
 
-The shared `.github/workflows/build.yml` uses official Mainline QMK commit
-`d194c077ed964195ec16d255c7a4b89a794cf03b` for both Corne variants. The Preonic
-variant retains Mainline `master`, resolved to a commit for each run.
+The shared `.github/workflows/build.yml` follows official Mainline QMK `master`.
+Each run resolves that branch once and uses the same commit for all four
+Preonic and Corne variants. Firmware is not permanently pinned; the build
+container remains fixed by digest. This hardware overlay remains versioned
+in the userspace repository and is not fetched from Keebart during the build.
 
 The manufacturer default keymap passed the first integration stage before the
 personal port began. See [migration notes](../../docs/corne-mainline.md) for

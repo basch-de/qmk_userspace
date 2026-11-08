@@ -8,7 +8,9 @@ Actions-Checkout ergänzt. Es werden keine Vial-/Studio-Komponenten eingebunden.
 ## Quellen und geprüfte Versionen
 
 - [Mainline QMK](https://github.com/qmk/qmk_firmware/tree/d194c077ed964195ec16d255c7a4b89a794cf03b),
-  Commit `d194c077ed964195ec16d255c7a4b89a794cf03b` für beide Corne-Keymaps.
+  bei der ursprünglichen Portierung geprüfter Commit
+  `d194c077ed964195ec16d255c7a4b89a794cf03b`. Aktuelle Builds folgen für beide
+  Tastaturen `master`; der tatsächlich verwendete Commit steht im Buildnachweis.
 - [Keebart-Hardwaredefinition](https://github.com/Keebart/vial-qmk-keebart/tree/63e2d6248209f1926e60daa5b950c771cf09d837/keyboards/keebart/corne_mx_pro),
   Branch `vial`, Commit `63e2d6248209f1926e60daa5b950c771cf09d837`.
   Übernommene Dateien und minimale Mainline-Anpassungen stehen in
@@ -19,8 +21,11 @@ Actions-Checkout ergänzt. Es werden keine Vial-/Studio-Komponenten eingebunden.
   ZMK `v0.3`; dessen Standarddefinitionen für `mt`, `lt` und Caps Word wurden
   zusätzlich geprüft.
 
-Die Preonic verwendet weiterhin den bisherigen offiziellen QMK-Branch `master`.
-Eine Corne-Aktualisierung ändert diese Referenz nicht.
+Beide Tastaturen verwenden den offiziellen QMK-Branch `master`. Wie im
+Studio-Projekt wird dieser einmal je Workflow-Lauf aufgelöst; alle vier
+Buildvarianten verwenden anschließend denselben Commit. Nur das Build-Image
+bleibt per Digest festgelegt. Das versionierte Keebart-Hardware-Overlay wird
+weiterhin aus diesem Repository übernommen.
 
 ## Aufbau und unabhängige Builds
 
@@ -45,10 +50,10 @@ Target mit `qmk mass-compile`. Die versionierte `qmk.json` wird nicht verändert
 Nur die Corne-Jobs installieren das Hardware-Overlay. Die Preonic-Keymap,
 `config.h` und `rules.mk` bleiben unverändert.
 
-Pro Lauf wird der aktuelle Mainline-`master` für beide Preonic-Varianten einmal aufgelöst.
-Beide Corne-Jobs verwenden denselben bisherigen gepinnten Mainline-Commit.
+Pro Lauf wird der aktuelle Mainline-`master` einmal für alle vier Varianten
+aufgelöst. Es gibt keinen dauerhaften Firmware-Commit-Pin mehr.
 Ein neuer QMK-Commit startet keinen Lauf in diesem Repository; der nächste
-Push, Pull Request oder manuelle Start nutzt die zugehörigen Referenzen.
+Push, Pull Request oder manuelle Start übernimmt den dann aktuellen Stand.
 
 Erwartete Firmware-Artefakte:
 

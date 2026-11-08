@@ -54,16 +54,16 @@ Internet prüfen:
 - Quellcode: https://github.com/qmk/qmk_firmware
 
 Maßgeblich für die Kompatibilität ist der vom GitHub-Workflow verwendete
-QMK-Commit beziehungsweise Branch der betroffenen Tastatur:
+QMK-Commit beziehungsweise Branch:
 
 - Gemeinsamer Workflow: `.github/workflows/build.yml`.
-- Preonic: aktueller Mainline-Branch `master`, pro Lauf auf einen Commit aufgelöst.
-- Corne: auf einen Mainline-Commit gepinnt; beide Corne-Varianten verwenden
-  innerhalb eines Laufs denselben Commit.
+- Preonic und Corne: aktueller offizieller Mainline-Branch `master`, einmal
+  pro Lauf auf einen Commit aufgelöst. Alle vier Varianten verwenden diesen
+  gemeinsamen Commit; keine dauerhaften Firmware-Commit-Pins ergänzen.
 
 Bei versionsabhängigen Änderungen den jeweiligen Workflow prüfen und dazu
-passende Dokumentation und Quellcode heranziehen. Die beiden Referenzen nicht
-ohne Auftrag vereinheitlichen. Bei Hardware-Overlay-Updates die dokumentierte
+passende Dokumentation und Quellcode heranziehen. Die Firmware-Referenz nicht
+ohne Auftrag ändern. Bei Hardware-Overlay-Updates die dokumentierte
 Keebart-Quelle prüfen und notwendige Mainline-Anpassungen nachvollziehbar halten.
 
 Firmware-Basis ist ausschließlich offizielles Mainline-QMK. Keine Änderungen
@@ -166,7 +166,7 @@ Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
   bleibt dabei unverändert und enthält beide persönlichen Targets.
 - Nur die Corne-Jobs installieren das Hardware-Overlay. Beide `default`-Builds
   verwenden je einen separaten Userspace ohne persönliche Keymap-Dateien.
-  Beide Preonic-Varianten verwenden denselben pro Lauf aufgelösten QMK-Commit.
+  Alle vier Varianten verwenden denselben pro Lauf aufgelösten QMK-Commit.
 - Firmware und Provenance werden je Variante als Actions-Artefakte gespeichert:
   QMK-/Userspace-Revisionen, Submodule, Compiler, Python-Pakete, Buildlog und
   Firmware-Prüfsumme. Der QMK-Container ist per Digest festgelegt.

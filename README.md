@@ -21,8 +21,14 @@ pull requests, and manual starts. Its four independent matrix jobs build:
 | --- | --- | --- |
 | `preonic-personal` | Official QMK `master`, resolved once per run | `Firmware` (BIN) |
 | `preonic-default` | Same resolved official QMK commit | `preonic-default` (BIN) |
-| `corne-standard-default` | Pinned official QMK commit | `corne-standard-default` (UF2) |
-| `corne-personal` | Same pinned official QMK commit | `corne-standard-basch_de` (UF2) |
+| `corne-standard-default` | Same resolved official QMK commit | `corne-standard-default` (UF2) |
+| `corne-personal` | Same resolved official QMK commit | `corne-standard-basch_de` (UF2) |
+
+Like the Studio project, each run resolves the current firmware branch once
+and uses that exact commit for every variant. Here the source is official QMK
+`master`; firmware is not permanently pinned to a commit. A new upstream commit
+is picked up on the next push, pull request, or manual run and does not itself
+trigger a build in this repository. The build container remains fixed by digest.
 
 Each job compiles only its selected target with `qmk mass-compile`. A failure
 in one variant does not cancel the other builds. Both manufacturer keymaps
