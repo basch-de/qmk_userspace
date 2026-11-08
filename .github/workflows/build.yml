@@ -128,6 +128,20 @@ jobs:
           printf '%s\n' "$BUILD_KEYBOARD:$BUILD_KEYMAP" > "$BUILD_INFO/target.txt"
           qmk userspace-doctor
 
+      - name: Test personal keymap with the native QMK framework
+        if: matrix.keymap == 'basch_de'
+        working-directory: firmware
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 "$GITHUB_WORKSPACE/userspace/tests/prepare.py" . "$BUILD_KEYBOARD" 2>&1 | tee "$BUILD_INFO/test-setup.log"
+          case "$BUILD_KEYBOARD" in
+            preonic/rev3_drop) suite=basch_preonic ;;
+            keebart/corne_mx_pro/standard) suite=basch_corne ;;
+            *) exit 1 ;;
+          esac
+          qmk test-c -t "$suite" -j "$(nproc)" 2>&1 | tee "$BUILD_INFO/tests.log"
+
       - name: Compile selected target without device access
         working-directory: firmware
         shell: bash

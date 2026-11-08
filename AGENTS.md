@@ -184,6 +184,14 @@ Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
   `fail-fast: false` verhindert, dass ein fehlgeschlagener Build andere abbricht.
 - Jeder Job kompiliert nur sein explizites Target. Die versionierte `qmk.json`
   bleibt dabei unverändert und enthält beide persönlichen Targets.
+- Die persönlichen Varianten führen vor dem Firmware-Build die nativen
+  QMK-Verhaltenstests aus `tests/` aus. Vorbereitung und Testausführung erfolgen
+  ausschließlich online gegen denselben QMK-Commit; keine lokalen Test-Builds.
+  Produktions-Keymaps und Timing-Hooks direkt verwenden, keine Tap-Hold-Engine
+  nachbilden oder QMK-Kerndateien für Tests verändern. Details: `tests/README.md`.
+  Bei beauftragten Verhaltensänderungen betroffene Erwartungen bewusst prüfen.
+  Testlogs liegen im jeweiligen Provenance-Artefakt; andere Matrix-Jobs bleiben
+  bei einem Testfehler unabhängig.
 - Nur die Corne-Jobs installieren das Hardware-Overlay. Beide `default`-Builds
   verwenden je einen separaten Userspace ohne persönliche Keymap-Dateien.
   Alle vier Varianten verwenden denselben pro Lauf aufgelösten QMK-Commit.

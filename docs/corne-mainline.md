@@ -77,6 +77,14 @@ Release- oder Tag-Veröffentlichung mehr. Ein vorhandener alter Preonic-Release
 Aktuelle Firmware und Buildnachweise stehen beim jeweiligen Actions-Lauf;
 ihre Verfügbarkeit unterliegt der Aufbewahrungsrichtlinie des Repositories.
 
+Die persönlichen Varianten führen zusätzlich die in [tests/README.md](../tests/README.md)
+beschriebenen nativen QMK-Tests aus. Sie verwenden die echten Produktions-Keymaps,
+Timing-Hooks und QMK-Verarbeitung einschließlich der erzeugten Tastaturberichte.
+Abgedeckt sind Struktur und kritische Layer-/SYS-Zugänge, HRMs, Daumentasten,
+Quick Tap und eigene Dual-Role-Aktionen. Testlogs und die verwendeten
+Hardware-Metadaten werden mit den bestehenden Provenance-Artefakten gespeichert.
+Die Herstellerbelegungen bleiben unabhängige Kompilierungsprüfungen.
+
 Es wurde kein lokaler Firmware-Build ausgeführt. Alle Firmware-Builds finden
 in GitHub Actions statt. Es wurden keine anderen Repositories verändert.
 

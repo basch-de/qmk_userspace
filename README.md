@@ -41,6 +41,12 @@ firmware and userspace revisions, submodules, compiler, Python packages,
 build logs, and firmware checksums. These are uploaded as `provenance-<variant>`
 artifacts, including available logs when compilation fails.
 
+The personal Preonic and Corne jobs also run [native QMK behavior tests](tests/README.md)
+against their actual production keymaps and the same firmware revision. These
+cover critical layer/system bindings, tap/hold sequences and custom actions.
+Test setup/output logs and hardware metadata are included in the corresponding
+provenance artifact. Default builds remain independent compilation baselines.
+
 The container uses `ghcr.io/qmk/qmk_cli:latest` directly, as in the official QMK
 userspace workflow. See [build container behavior](docs/build-container.md).
 As in QMK's own userspace workflow, Python dependencies are installed from the
