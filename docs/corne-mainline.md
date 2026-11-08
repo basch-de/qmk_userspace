@@ -28,22 +28,43 @@ Eine Corne-Aktualisierung ändert diese Referenz nicht.
 
 | Tastatur | Keymap | Workflow |
 | --- | --- | --- |
-| `preonic/rev3_drop` | `basch_de` | `build_binaries.yaml` |
-| `keebart/corne_mx_pro/standard` | `basch_de` | `build_corne.yaml` |
+| `preonic/rev3_drop` | `basch_de` | `build.yml`, Variante `preonic-personal` |
+| `keebart/corne_mx_pro/standard` | `basch_de` | `build.yml`, Variante `corne-personal` |
 
-Die Hersteller-Keymap `default` wird im Corne-Workflow zusätzlich als
-Hardware-Referenz gebaut. Beide Corne-Jobs laufen unabhängig (`fail-fast: false`)
-und liefern eigene UF2-Artefakte: `corne-standard-default` und
-`corne-standard-basch_de`. Im Actions-Tab den jeweiligen Lauf und dessen
-**Artifacts** öffnen. Der Corne-Workflow ist auch separat manuell ausführbar.
+Der gemeinsame Workflow `.github/workflows/build.yml` folgt dem Buildmuster
+des Studio-Projekts: unabhängige Matrix-Jobs, ein festgelegtes Container-Image,
+ein isolierter Hersteller-Userspace und getrennte Firmware-/Provenance-Artefakte.
+Firmware-Basis bleibt offizielles Mainline-QMK. Die bisherigen zwei Workflows
+wurden durch diese eine Datei ersetzt.
 
-Der bisherige Preonic-Workflow einschließlich Release-Veröffentlichung bleibt
-bestehen. Sein einziger zusätzlicher Vorbereitungsschritt entfernt das
-Corne-Target aus der **temporären CI-Kopie** von `qmk.json`, bevor der offizielle
-Userspace-Builder läuft. Damit benötigt der Preonic-Build keine Keebart-Dateien
-und hängt nicht vom Corne-Build ab. Die versionierte `qmk.json` enthält beide
-Targets; die Preonic-Keymap, `config.h` und `rules.mk` bleiben unverändert.
-Corne-Artefakte werden unabhängig davon direkt per Actions bereitgestellt.
+Die zusätzliche Variante `corne-standard-default` baut die Hersteller-Keymap als
+Hardware-Referenz ohne persönliche Keymap-Dateien. Alle drei Varianten laufen
+mit `fail-fast: false`; jeder Job kompiliert ausschließlich sein explizites
+Target mit `qmk mass-compile`. Die versionierte `qmk.json` wird nicht verändert.
+Nur die Corne-Jobs installieren das Hardware-Overlay. Die Preonic-Keymap,
+`config.h` und `rules.mk` bleiben unverändert.
+
+Pro Lauf wird der aktuelle Mainline-`master` für die Preonic einmal aufgelöst.
+Beide Corne-Jobs verwenden denselben bisherigen gepinnten Mainline-Commit.
+Ein neuer QMK-Commit startet keinen Lauf in diesem Repository; der nächste
+Push, Pull Request oder manuelle Start nutzt die zugehörigen Referenzen.
+
+Erwartete Firmware-Artefakte:
+
+- `Firmware`: Preonic-BIN, mit der bisherigen Veröffentlichung kompatibel.
+- `corne-standard-default`: UF2 der Herstellerbelegung.
+- `corne-standard-basch_de`: UF2 der persönlichen Corne-Keymap.
+
+Zu jeder Variante kommt ein `provenance-…`-Artefakt mit QMK-/Userspace-Commit,
+Submodulen, Compiler, Python-Paketen, Buildlog und Firmware-Prüfsumme hinzu.
+Auch bei fehlgeschlagener Kompilierung werden vorhandene Logs hochgeladen.
+Im Actions-Tab den Lauf **Build QMK firmware** und dessen **Artifacts** öffnen.
+
+Die Preonic-Veröffentlichung unter `latest` bleibt auf `main` erhalten.
+Sie wartet auf den Abschluss der Matrix, wird aber auch bei einem fehlgeschlagenen
+Corne-Job ausgeführt. Ohne erfolgreich hochgeladenes Preonic-Artefakt wird die
+vorherige Veröffentlichung nicht gelöscht. Pull Requests veröffentlichen keine
+Releases. Corne-Firmware bleibt als unabhängiges Actions-Artefakt verfügbar.
 
 Es wurde kein lokaler Firmware-Build ausgeführt. Alle Firmware-Builds finden
 in GitHub Actions statt. Es wurden keine anderen Repositories verändert.
@@ -152,7 +173,7 @@ der gepinnten ZMK-Quelldatei verglichen, einschließlich der ausdrücklich oben
 aufgeführten Ausnahmen. Zusätzlich wurden Layoutgröße, eindeutige Matrixpositionen,
 Hand-/Daumenzuordnung, RGB-LED-Zahl, JSON und unveränderte Preonic-Dateien geprüft.
 Die abschließenden Logs und UF2-Dateien sind bei den
-[Actions-Läufen des Integrationsbranches](https://github.com/basch-de/qmk_userspace/actions?query=branch%3Acorne-mainline-integration)
+[Actions-Läufen auf main](https://github.com/basch-de/qmk_userspace/actions?query=branch%3Amain)
 für den jeweiligen Commit zu finden. Ein grüner Build bestätigt Kompilierbarkeit,
 keine Hardwarefunktion.
 

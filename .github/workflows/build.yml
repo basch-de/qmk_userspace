@@ -1,0 +1,201 @@
+name: Build QMK firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qmk-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  firmware-revision:
+    name: Resolve Mainline QMK revisions
+    runs-on: ubuntu-latest
+    outputs:
+      preonic: ${{ steps.revision.outputs.preonic }}
+      corne: ${{ steps.revision.outputs.corne }}
+    steps:
+      - name: Checkout current official QMK master
+        uses: actions/checkout@v6
+        with:
+          repository: qmk/qmk_firmware
+          ref: master
+          persist-credentials: false
+
+      - name: Resolve firmware commits for this run
+        id: revision
+        env:
+          CORNE_QMK_COMMIT: d194c077ed964195ec16d255c7a4b89a794cf03b
+        run: |
+          echo "preonic=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "corne=$CORNE_QMK_COMMIT" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: ${{ matrix.variant }}
+    needs: firmware-revision
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    container: ghcr.io/qmk/qmk_cli@sha256:2dc05fc9f32efebd6b05c2b8676ee548358bc7e151e9dbf4dac6b6eed4513b07
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: preonic-personal
+            keyboard: preonic/rev3_drop
+            keymap: basch_de
+            firmware: ${{ needs.firmware-revision.outputs.preonic }}
+            overlay: userspace
+            extension: bin
+            artifact: Firmware
+            corne: false
+          - variant: corne-standard-default
+            keyboard: keebart/corne_mx_pro/standard
+            keymap: default
+            firmware: ${{ needs.firmware-revision.outputs.corne }}
+            overlay: stock-userspace
+            extension: uf2
+            artifact: corne-standard-default
+            corne: true
+          - variant: corne-personal
+            keyboard: keebart/corne_mx_pro/standard
+            keymap: basch_de
+            firmware: ${{ needs.firmware-revision.outputs.corne }}
+            overlay: userspace
+            extension: uf2
+            artifact: corne-standard-basch_de
+            corne: true
+    env:
+      QMK_USERSPACE: ${{ github.workspace }}/${{ matrix.overlay }}
+      BUILD_KEYBOARD: ${{ matrix.keyboard }}
+      BUILD_KEYMAP: ${{ matrix.keymap }}
+      BUILD_EXTENSION: ${{ matrix.extension }}
+      BUILD_INFO: ${{ github.workspace }}/build-info
+    steps:
+      - name: Checkout userspace
+        uses: actions/checkout@v6
+        with:
+          path: userspace
+          persist-credentials: false
+
+      - name: Checkout resolved official QMK revision
+        uses: actions/checkout@v6
+        with:
+          repository: qmk/qmk_firmware
+          ref: ${{ matrix.firmware }}
+          path: firmware
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Install Mainline dependencies
+        run: pip install -r firmware/requirements.txt
+
+      - name: Install Corne hardware definition
+        if: matrix.corne
+        run: |
+          test ! -e firmware/keyboards/keebart/corne_mx_pro
+          mkdir -p firmware/keyboards/keebart
+          cp -R userspace/vendor/qmk/keyboards/keebart/corne_mx_pro firmware/keyboards/keebart/
+
+      - name: Prepare isolated manufacturer userspace
+        if: matrix.overlay == 'stock-userspace'
+        run: |
+          mkdir -p "$QMK_USERSPACE"
+          cp userspace/qmk.json "$QMK_USERSPACE/qmk.json"
+
+      - name: Configure external userspace
+        working-directory: firmware
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE/firmware"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE/userspace"
+          qmk config user.qmk_home="$GITHUB_WORKSPACE/firmware"
+          qmk config user.overlay_dir="$QMK_USERSPACE"
+
+      - name: Record provenance and validate userspace
+        working-directory: firmware
+        run: |
+          mkdir -p "$BUILD_INFO"
+          git rev-parse HEAD > "$BUILD_INFO/firmware-commit.txt"
+          git submodule status --recursive > "$BUILD_INFO/submodules.txt"
+          git -C "$GITHUB_WORKSPACE/userspace" rev-parse HEAD > "$BUILD_INFO/userspace-commit.txt"
+          arm-none-eabi-gcc --version > "$BUILD_INFO/compiler.txt"
+          pip freeze > "$BUILD_INFO/python-packages.txt"
+          printf '%s\n' "$BUILD_KEYBOARD:$BUILD_KEYMAP" > "$BUILD_INFO/target.txt"
+          qmk userspace-doctor
+
+      - name: Compile selected target without device access
+        working-directory: firmware
+        shell: bash
+        run: |
+          set -o pipefail
+          if ! qmk mass-compile -j "$(nproc)" "$BUILD_KEYBOARD:$BUILD_KEYMAP" 2>&1 | tee "$BUILD_INFO/build.log"; then
+            for log in .build/failed.log.*; do
+              [ -f "$log" ] || continue
+              cp "$log" "$BUILD_INFO/"
+              cat "$log"
+            done
+            exit 1
+          fi
+          shopt -s nullglob
+          binaries=("$QMK_USERSPACE/"*"_${BUILD_KEYMAP}.${BUILD_EXTENSION}")
+          if [ "${#binaries[@]}" -eq 0 ]; then
+            echo "::error::Build produced no expected firmware in the external userspace."
+            exit 1
+          fi
+          sha256sum "${binaries[@]}" > "$BUILD_INFO/firmware-sha256.txt"
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ env.QMK_USERSPACE }}/*_${{ matrix.keymap }}.${{ matrix.extension }}
+          if-no-files-found: error
+
+      - name: Upload provenance and compiler log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: provenance-${{ matrix.variant }}
+          path: build-info/
+          if-no-files-found: warn
+
+  publish:
+    name: Publish Preonic firmware
+    needs: build
+    if: always() && !cancelled() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout userspace
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      # A failed Corne job does not prevent publication. Missing Preonic firmware
+      # fails this step and leaves the previous release intact.
+      - name: Download Preonic firmware
+        uses: actions/download-artifact@v8
+        with:
+          name: Firmware
+          path: release-firmware
+
+      - name: Replace previous release
+        run: gh release delete latest --cleanup-tag --yes || true
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Publish latest Preonic firmware
+        uses: softprops/action-gh-release@v3
+        with:
+          token: ${{ github.token }}
+          name: Latest QMK Firmware
+          tag_name: latest
+          fail_on_unmatched_files: true
+          draft: false
+          prerelease: false
+          files: release-firmware/*.bin

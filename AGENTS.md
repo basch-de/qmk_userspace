@@ -56,8 +56,10 @@ Internet prüfen:
 Maßgeblich für die Kompatibilität ist der vom GitHub-Workflow verwendete
 QMK-Commit beziehungsweise Branch der betroffenen Tastatur:
 
-- Preonic: `.github/workflows/build_binaries.yaml`, bisher Mainline `master`.
-- Corne: `.github/workflows/build_corne.yaml`, auf einen Mainline-Commit gepinnt.
+- Gemeinsamer Workflow: `.github/workflows/build.yml`.
+- Preonic: aktueller Mainline-Branch `master`, pro Lauf auf einen Commit aufgelöst.
+- Corne: auf einen Mainline-Commit gepinnt; beide Corne-Varianten verwenden
+  innerhalb eines Laufs denselben Commit.
 
 Bei versionsabhängigen Änderungen den jeweiligen Workflow prüfen und dazu
 passende Dokumentation und Quellcode heranziehen. Die beiden Referenzen nicht
@@ -156,14 +158,22 @@ und `rules.mk` auf Englisch verfassen. Die Kommunikation bleibt auf Deutsch.
 Kompiliert wird ausschließlich online über GitHub Actions mit der dort
 eingebundenen QMK-Version. Keine lokalen Builds ausführen.
 
-Die Workflows bleiben unabhängig:
+Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
 
-- `build_binaries.yaml` baut und veröffentlicht die Preonic. Der
-  Vorbereitungsschritt entfernt das Corne-Target nur aus der temporären
-  CI-Kopie von `qmk.json`; die versionierte Datei enthält beide Targets.
-- `build_corne.yaml` installiert das Hardware-Overlay und baut `default` sowie
-  `basch_de` in unabhängigen Matrix-Jobs. UF2-Dateien werden als getrennte
-  Actions-Artefakte bereitgestellt.
+- Drei Matrix-Jobs bauen Preonic `basch_de`, Corne `default` und Corne `basch_de`.
+  `fail-fast: false` verhindert, dass ein fehlgeschlagener Build andere abbricht.
+- Jeder Job kompiliert nur sein explizites Target. Die versionierte `qmk.json`
+  bleibt dabei unverändert und enthält beide persönlichen Targets.
+- Nur die Corne-Jobs installieren das Hardware-Overlay. Die Herstellerbelegung
+  verwendet einen separaten Userspace ohne persönliche Keymap-Dateien.
+- Firmware und Provenance werden je Variante als Actions-Artefakte gespeichert:
+  QMK-/Userspace-Revisionen, Submodule, Compiler, Python-Pakete, Buildlog und
+  Firmware-Prüfsumme. Der QMK-Container ist per Digest festgelegt.
+- Die Preonic behält ihr `Firmware`-Artefakt und die Veröffentlichung unter
+  `latest` auf `main`. Corne-Fehler verhindern diese Veröffentlichung nicht;
+  ohne Preonic-Artefakt bleibt die vorherige Veröffentlichung erhalten.
+- Pushes, Pull Requests und manuelle Starts nutzen denselben Workflow.
+  Pull Requests veröffentlichen keine Releases. Keine Flash-Schritte ergänzen.
 
 Bei Änderungen der Corne-Hardwaredefinition zuerst die Herstellerbelegung
 `default` gegen Mainline-QMK prüfen, bevor die persönliche Keymap auf die

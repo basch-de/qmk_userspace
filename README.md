@@ -1,64 +1,54 @@
-# QMK Userspace
+# QMK External Userspace
 
-Personal keymaps: Preonic Drop rev3 and Keebart Corne MX Pro Standard.
-See [Corne Mainline migration notes](docs/corne-mainline.md) for the hardware
-overlay, independent Actions builds, ZMK behavior mapping, and hardware test list.
-This project compiles firmware exclusively through GitHub Actions.
+Personal `basch_de` keymaps for two keyboards:
 
-This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the [main QMK repository](https://github.com/qmk/qmk_firmware). You must still fork the main QMK repository if writing firmware for a *new* keyboard.
+- Preonic Drop rev3: `preonic/rev3_drop`, 60 individual 1u keys.
+- Keebart Corne MX Pro Standard: `keebart/corne_mx_pro/standard`, RP2040, 46 keys.
 
-## Howto configure your build targets
+Both targets are listed in `qmk.json`. Firmware uses official Mainline QMK.
+The Corne hardware definition is installed from the versioned
+[hardware overlay](vendor/qmk/README.md); no Vial or Studio runtime is included.
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. Enable userspace in QMK config using `qmk config user.overlay_dir="$(realpath qmk_userspace)"`
-1. Add a new keymap for your board using `qmk new-keymap`
-    * This will create a new keymap in the `keyboards` directory, in the same location that would normally be used in the main QMK repository. For example, if you wanted to add a keymap for the Planck, it will be created in `keyboards/planck/keymaps/<your keymap name>`
-    * You can also create a new keymap using `qmk new-keymap -kb <your_keyboard> -km <your_keymap>`
-    * Alternatively, add your keymap manually by placing it in the location specified above.
-    * `layouts/<layout name>/<your keymap name>/keymap.*` is also supported if you prefer the layout system
-1. Add your keymap(s) to the build by running `qmk userspace-add -kb <your_keyboard> -km <your_keymap>`
-    * This will automatically update your `qmk.json` file
-    * Corresponding `qmk userspace-remove -kb <your_keyboard> -km <your_keymap>` will delete it
-    * Listing the build targets can be done with `qmk userspace-list`
-1. Commit your changes
+See the [Corne migration notes](docs/corne-mainline.md) for source versions,
+ZMK behavior mapping, remaining differences, and the hardware test list.
 
-## Howto build with GitHub
+## GitHub Actions
 
-1. In the GitHub Actions tab, enable workflows
-1. Push your changes above to your forked GitHub repository
-1. Look at the GitHub Actions for a new actions run
-1. Wait for the actions run to complete
-1. Inspect the Releases tab on your repository for the latest firmware build
+The single workflow [build.yml](.github/workflows/build.yml) runs on pushes,
+pull requests, and manual starts. Its three independent matrix jobs build:
 
-## Howto build locally
+| Variant | Firmware reference | Artifact |
+| --- | --- | --- |
+| `preonic-personal` | Official QMK `master`, resolved once per run | `Firmware` (BIN) |
+| `corne-standard-default` | Pinned official QMK commit | `corne-standard-default` (UF2) |
+| `corne-personal` | Same pinned official QMK commit | `corne-standard-basch_de` (UF2) |
 
-1. Run the normal `qmk setup` procedure if you haven't already done so -- see [QMK Docs](https://docs.qmk.fm/#/newbs) for details.
-1. Fork this repository
-1. Clone your fork to your local machine
-1. `cd` into this repository's clone directory
-1. Set global userspace path: `qmk config user.overlay_dir="$(realpath .)"` -- you MUST be located in the cloned userspace location for this to work correctly
-    * This will be automatically detected if you've `cd`ed into your userspace repository, but the above makes your userspace available regardless of your shell location.
-1. Compile normally: `qmk compile -kb your_keyboard -km your_keymap` or `make your_keyboard:your_keymap`
+Each job compiles only its selected target with `qmk mass-compile`. A failure
+in one variant does not cancel the other builds. The manufacturer Corne keymap
+uses a separate userspace without personal keymap files. Only the Corne jobs
+install the hardware overlay; the versioned `qmk.json` is left unchanged.
 
-Alternatively, if you configured your build targets above, you can use `qmk userspace-compile` to build all of your userspace targets at once.
+Like the Studio project's build structure, the workflow uses a fixed QMK
+container image and records provenance separately for every variant:
+firmware and userspace revisions, submodules, compiler, Python packages,
+build logs, and firmware checksums. These are uploaded as `provenance-<variant>`
+artifacts, including available logs when compilation fails.
 
-## Extra info
+Download the firmware from **Actions → Build QMK firmware → run → Artifacts**.
+The existing Preonic `latest` release is refreshed on `main`, independently of
+Corne build success. A missing Preonic artifact leaves the previous release
+intact. Pull requests do not publish releases.
 
-If you wish to point GitHub actions to a different repository, a different branch, or even a different keymap name, you can modify `.github/workflows/build_binaries.yml` to suit your needs.
+All firmware compilation takes place in GitHub Actions. The workflow does not
+flash devices, clear EEPROM, or delete device flash. Compilation success does
+not replace physical testing of tap/hold behavior, host output, or peripherals.
 
-To override the `build` job, you can change the following parameters to use a different QMK repository or branch:
-```
-    with:
-      qmk_repo: qmk/qmk_firmware
-      qmk_ref: master
-```
+## Working on keymaps
 
-If you wish to manually manage `qmk_firmware` using git within the userspace repository, you can add `qmk_firmware` as a submodule in the userspace directory instead. GitHub Actions will automatically use the submodule at the pinned revision if it exists, otherwise it will use the default latest revision of `qmk_firmware` from the main repository.
+- Preonic: `keyboards/preonic/keymaps/basch_de/`.
+- Corne: `keyboards/keebart/corne_mx_pro/keymaps/basch_de/`.
+- Corne hardware and manufacturer baseline: `vendor/qmk/`.
+- Repository instructions: [AGENTS.md](AGENTS.md).
 
-This can also be used to control which fork is used, though only upstream `qmk_firmware` will have support for external userspace until other manufacturers update their forks.
-
-1. (First time only) `git submodule add https://github.com/qmk/qmk_firmware.git`
-1. (To update) `git submodule update --init --recursive`
-1. Commit your changes to your userspace repository
+Keep each keymap's physical matrix and diagrams aligned. Changes for one
+keyboard must preserve the other keyboard's configuration and build behavior.
