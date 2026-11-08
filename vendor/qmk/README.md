@@ -3,6 +3,20 @@
 Source: [Keebart/vial-qmk-keebart, branch vial](https://github.com/Keebart/vial-qmk-keebart/tree/63e2d6248209f1926e60daa5b950c771cf09d837/keyboards/keebart/corne_mx_pro)
 at commit `63e2d6248209f1926e60daa5b950c771cf09d837`.
 
+## Upstream checks during sessions
+
+- Last checked: 2026-11-08.
+- Observed `vial` head: `63e2d6248209f1926e60daa5b950c771cf09d837`.
+- Result: branch head matches the imported source; no upstream update available.
+
+Recheck occasionally during substantive Corne or build-system work, roughly
+monthly, or on request. When upstream advances, compare the relevant original
+hardware and default-keymap files against the imported source before deciding
+which changes apply. Record the check separately from an actual import.
+This is a session maintenance task, independent of firmware compilation.
+
+## Overlay contents and Mainline adjustments
+
 Only the shared hardware definition, Standard variant, and manufacturer default
 keymap are included. No Vial keymaps, Vial runtime, Studio, Mini variant, or QMK
 core files are included. GitHub Actions copies this hardware subtree into a fresh

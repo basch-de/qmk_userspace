@@ -66,6 +66,26 @@ passende Dokumentation und Quellcode heranziehen. Die Firmware-Referenz nicht
 ohne Auftrag ändern. Bei Hardware-Overlay-Updates die dokumentierte
 Keebart-Quelle prüfen und notwendige Mainline-Anpassungen nachvollziehbar halten.
 
+## Gelegentliche Keebart-Prüfung in Sessions
+
+- Die Aktualität des Hardware-Overlays im Rahmen unserer Sessions prüfen.
+  Bei inhaltlicher Arbeit an Corne oder Buildsystem den letzten Prüfstand in
+  `vendor/qmk/README.md` ansehen. Als Richtwert erneut prüfen, wenn der Check
+  älter als etwa 30 Tage oder noch nicht dokumentiert ist; auf Wunsch jederzeit.
+  Bloße Rückfragen und kleine Dokumentationsänderungen erfordern keinen Check.
+- Den aktuellen Keebart-Branch `vial` mit dem dokumentierten Quellstand
+  vergleichen. Bei neuer Commit-ID die für das Overlay relevanten originalen
+  Hardwaredateien und die Hersteller-Keymap vergleichen; Änderungen an anderen
+  Tastaturen allein erfordern kein Overlay-Update. Unsere Mainline-Anpassungen
+  beim Vergleich berücksichtigen.
+- Prüfdatum, beobachteten Upstream-Commit und Ergebnis in `vendor/qmk/README.md`
+  festhalten. Den übernommenen Quellstand nur bei tatsächlicher Übernahme ändern.
+  Relevante Änderungen und erforderliche Anpassungen kurz erläutern und nach den
+  bestehenden Mainline- und Build-Prüfregeln behandeln.
+- Die Prüfung bleibt vom normalen Firmware-Build entkoppelt. Dafür keinen
+  Zeitplan, zusätzlichen Wartungsworkflow oder automatischen Update-PR einführen.
+  Zwischen Sessions findet keine Hintergrundprüfung statt.
+
 Firmware-Basis ist ausschließlich offizielles Mainline-QMK. Keine Änderungen
 am QMK-Kern, insbesondere unter `quantum/`, und keine Vial- oder
 Keebart-Studio-Abhängigkeiten einführen.
