@@ -12,6 +12,8 @@ userspace `keyboards/` tree.
 Mainline compatibility changes:
 
 - Remove `DYNAMIC_KEYMAP_LAYER_COUNT` and `VIALRGB_NO_DIRECT` from `config.h`.
+- Enable Mainline `TRI_LAYER_ENABLE` for the default keymap's existing
+  `TL_LOWR`/`TL_UPPR` keys and their Adjust/bootloader layer.
 - Replace obsolete default-keymap `RGB_*` controls with their current RGB Matrix
   equivalents: `RM_TOGG`, `RM_NEXT`, `RM_PREV`, `RM_HUEU`, `RM_HUED`, `RM_SATU`,
   `RM_SATD`, `RM_VALU`, and `RM_VALD`. Key positions, layer behavior, and encoder
