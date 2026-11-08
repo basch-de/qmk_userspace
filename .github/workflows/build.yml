@@ -62,7 +62,7 @@ jobs:
             extension: uf2
             artifact: corne-standard-default
             corne: true
-          - variant: corne-personal
+          - variant: corne-standard-basch_de
             keyboard: keebart/corne_mx_pro/standard
             keymap: basch_de
             overlay: userspace

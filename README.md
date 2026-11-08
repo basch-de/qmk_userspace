@@ -22,7 +22,7 @@ pull requests, and manual starts. Its four independent matrix jobs build:
 | `preonic-personal` | Official QMK `master`, resolved once per run | `preonic-basch_de` (BIN) |
 | `preonic-default` | Same resolved official QMK commit | `preonic-default` (BIN) |
 | `corne-standard-default` | Same resolved official QMK commit | `corne-standard-default` (UF2) |
-| `corne-personal` | Same resolved official QMK commit | `corne-standard-basch_de` (UF2) |
+| `corne-standard-basch_de` | Same resolved official QMK commit | `corne-standard-basch_de` (UF2) |
 
 Like the Studio project, each run resolves the current firmware branch once
 and uses that exact commit for every variant. Here the source is official QMK

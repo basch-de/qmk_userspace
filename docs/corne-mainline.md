@@ -35,7 +35,7 @@ weiterhin aus diesem Repository übernommen.
 | Tastatur | Keymap | Workflow |
 | --- | --- | --- |
 | `preonic/rev3_drop` | `basch_de` | `build.yml`, Variante `preonic-personal` |
-| `keebart/corne_mx_pro/standard` | `basch_de` | `build.yml`, Variante `corne-personal` |
+| `keebart/corne_mx_pro/standard` | `basch_de` | `build.yml`, Variante `corne-standard-basch_de` |
 
 Der gemeinsame Workflow `.github/workflows/build.yml` folgt dem Buildmuster
 des Studio-Projekts: unabhängige Matrix-Jobs, isolierte Hersteller-Userspaces
