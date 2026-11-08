@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// Key positions ported from basch-de/zmk-config, see docs/corne-mainline.md.
+// Key positions ported from basch-de/zmk-config, see docs/PROJECT.md.
 #include QMK_KEYBOARD_H
 #include "keymap_defs.h"
 

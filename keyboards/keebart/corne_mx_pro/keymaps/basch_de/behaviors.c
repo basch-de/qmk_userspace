@@ -20,23 +20,8 @@ static bool is_home_row_mod(uint16_t keycode) {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     (void)record;
-    if (is_home_row_mod(keycode)) {
-        return 240;
-    }
-    switch (keycode) {
-        case PAD_ENT:
-            return 220;
-        case SYS_GRV:
-        case NAV_ESC:
-        case NUM_BSPC:
-        case WIN_TAB:
-        case SYM_SPC:
-        case SHORT_CW:
-        case SHORT_EQL:
-            return 180;
-        default:
-            return TAPPING_TERM;
-    }
+    // Start with QMK's recommended HRM term; other dual-role keys use the default.
+    return is_home_row_mod(keycode) ? 250 : TAPPING_TERM;
 }
 
 uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {

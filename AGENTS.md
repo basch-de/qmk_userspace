@@ -23,7 +23,7 @@ einem gemeinsamen QMK External Userspace. Beide verwenden die Keymap `basch_de`.
 - Layout-Makro: `LAYOUT_split_3x6_3_ex2`
 - Layer: `macos`, `num`, `sym`, `nav`, `win`, `short`, `numpad`, `sys`
 - Portierungsquellen, Einschränkungen und Hardware-Testliste:
-  `docs/corne-mainline.md`; Herkunft und Anpassungen des Hardware-Overlays:
+  `docs/PROJECT.md`; Herkunft und Anpassungen des Hardware-Overlays:
   `vendor/qmk/README.md`.
 
 # Arbeitsbereich
@@ -42,7 +42,13 @@ Wichtige Dateien:
 - `.github/workflows/`: Online-Build-Konfiguration
 - `vendor/qmk/`: Hardware-Overlay für die Corne; wird erst im Actions-Checkout
   in offizielles QMK kopiert
-- `docs/corne-mainline.md`: dokumentierte Corne-Portierung und Abweichungen
+- `docs/PROJECT.md`: Architektur, Buildumgebung, Corne-Portierung und Prüfstand
+
+Die README bleibt der kurze Einstieg. Allgemeine technische Details und
+Buildnachweise zentral in `docs/PROJECT.md` pflegen. `vendor/qmk/README.md`
+enthält Herkunft, Mainline-Anpassungen und Upstream-Prüfstand des Hardware-Overlays;
+allgemeine Build- und Container-Erklärungen dort nicht wiederholen.
+Details zum nativen Testaufbau stehen in `tests/README.md`.
 
 Das veraltete lokale Verzeichnis `../qmk_firmware` darf nicht als fachliche
 Referenz verwendet werden.
@@ -165,10 +171,17 @@ und `rules.mk` auf Englisch verfassen. Die Kommunikation bleibt auf Deutsch.
   Daumenzuordnung. Layer-Taps und äußere Mod-Taps haben eigene Regeln.
   Unterschiede zu ZMK `balanced` und `hold-trigger-on-release` beachten.
 - Tapping Terms und Quick-Tap-Werte sind QMK-Startwerte für Hardwaretests.
+  Aktuelle Timingbasis: 250 ms für HRMs, 200 ms für andere Dual-Role-Tasten.
+  Quick Tap separat abstimmen; bisherige Werte bleiben vorläufig. Quellen und
+  konkrete Werte stehen in `docs/PROJECT.md` und `behaviors.c`.
   ZMK-Timingwerte nicht ungeprüft übernehmen oder Verhaltensgleichheit behaupten.
 - Nicht vollständig abbildbare ZMK-Funktionen und mögliche Alternativen in
-  `docs/corne-mainline.md` dokumentieren. Deaktivierte Funktionen nicht ohne
+  `docs/PROJECT.md` dokumentieren. Deaktivierte Funktionen nicht ohne
   Auftrag durch vermeintlich ähnliche Host-Shortcuts oder HID-Keycodes ersetzen.
+- Ausdrücklich freigegebene Ausnahmen: SHORT:35 verwendet `KC_ASST` (QMK
+  Assistant), SYS:13 `KC_PWR` (QMK System Power), jeweils nullbasiert.
+  Diese HID-Aktionen unterscheiden sich von ZMK Voice Command und Consumer Power;
+  ihre tatsächliche macOS-Wirkung bleibt zu prüfen.
 - SYS-Zugänge zu `QK_BOOT`, `QK_RBT` und `EE_CLR` auf beiden Seiten erhalten.
   Diese Standardaktionen betreffen im normalen Split-Betrieb den USB-Master,
   nicht automatisch die Hälfte, auf der die Taste gedrückt wurde.
@@ -202,7 +215,7 @@ Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
   Firmware-Prüfsumme. Der QMK-Container folgt dem offiziellen Tag `latest`.
 - Wie im offiziellen QMK-Workflow `ghcr.io/qmk/qmk_cli:latest` verwenden;
   keinen Container-Digest ohne Auftrag festschreiben. Details stehen in
-  `docs/build-container.md`. Python-Abhängigkeiten werden wie im offiziellen
+  `docs/PROJECT.md`. Python-Abhängigkeiten werden wie im offiziellen
   QMK-Workflow aus
   den `requirements.txt` des verwendeten Firmware-Commits installiert; ihre
   tatsächlich verwendeten Versionen stehen im Provenance-Artefakt.

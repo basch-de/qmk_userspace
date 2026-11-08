@@ -19,9 +19,9 @@ This is a session maintenance task, independent of firmware compilation.
 
 Only the shared hardware definition, Standard variant, and manufacturer default
 keymap are included. No Vial keymaps, Vial runtime, Studio, Mini variant, or QMK
-core files are included. GitHub Actions copies this hardware subtree into a fresh
-official QMK checkout before compilation. Personal keymaps remain in the external
-userspace `keyboards/` tree.
+core files are included. Personal keymaps remain in the external userspace
+`keyboards/` tree. The overlay is versioned here rather than fetched from Keebart
+during compilation.
 
 Mainline compatibility changes:
 
@@ -38,13 +38,6 @@ RGB Matrix layout, OLED and encoder configuration are retained from the source.
 Hardware verification is still required, including the manufacturer's shared
 I2C/encoder pin assignments; optional peripherals must match the installed hardware.
 
-The shared `.github/workflows/build.yml` follows official Mainline QMK `master`.
-Each run resolves that branch once and uses the same commit for all four
-Preonic and Corne variants. Firmware is not permanently pinned; the build
-container follows `ghcr.io/qmk/qmk_cli:latest`, as in official QMK's userspace
-workflow. This hardware overlay remains versioned
-in the userspace repository and is not fetched from Keebart during the build.
-
-The manufacturer default keymap passed the first integration stage before the
-personal port began. See [migration notes](../../docs/corne-mainline.md) for
-the build evidence, source mapping, and remaining behavior differences.
+See [project documentation](../../docs/PROJECT.md) for the build process,
+container and dependencies, build evidence, ZMK mapping, and remaining
+behavior differences.

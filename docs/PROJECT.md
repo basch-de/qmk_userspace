@@ -1,34 +1,20 @@
-# Corne MX Pro: Mainline-QMK-Portierung
+# QMK External Userspace: Projektdokumentation
 
-Die Keebart Corne MX Pro Standard (46 Tasten, RP2040) wird zusätzlich zur
-Preonic im bestehenden External Userspace gepflegt. Firmware-Basis ist
-unverändertes offizielles QMK; ausschließlich die Hardwaredefinition wird im
-Actions-Checkout ergänzt. Es werden keine Vial-/Studio-Komponenten eingebunden.
+Dieses Projekt enthält zwei persönliche `basch_de`-Keymaps in einem gemeinsamen
+QMK External Userspace. Firmware-Basis ist offizielles Mainline-QMK. Für die Corne
+wird nur die Hardwaredefinition im Actions-Checkout ergänzt; Vial-/Studio-
+Firmwarekomponenten und Änderungen am QMK-Kern sind nicht enthalten.
 
-## Quellen und geprüfte Versionen
+| Tastatur | Hardware | Persönliche Keymap |
+| --- | --- | --- |
+| Preonic Drop rev3 | 60 einzelne 1u-Tasten, fünf Reihen mit zwölf Spalten | `keyboards/preonic/keymaps/basch_de/` |
+| Keebart Corne MX Pro Standard | RP2040, 46 Tasten, Reihen mit 14 + 14 + 12 + 6 Positionen | `keyboards/keebart/corne_mx_pro/keymaps/basch_de/` |
 
-- [Mainline QMK](https://github.com/qmk/qmk_firmware/tree/d194c077ed964195ec16d255c7a4b89a794cf03b),
-  bei der ursprünglichen Portierung geprüfter Commit
-  `d194c077ed964195ec16d255c7a4b89a794cf03b`. Aktuelle Builds folgen für beide
-  Tastaturen `master`; der tatsächlich verwendete Commit steht im Buildnachweis.
-- [Keebart-Hardwaredefinition](https://github.com/Keebart/vial-qmk-keebart/tree/63e2d6248209f1926e60daa5b950c771cf09d837/keyboards/keebart/corne_mx_pro),
-  Branch `vial`, Commit `63e2d6248209f1926e60daa5b950c771cf09d837`.
-  Übernommene Dateien und minimale Mainline-Anpassungen stehen in
-  [vendor/qmk/README.md](../vendor/qmk/README.md).
-- [Tatsächliche ZMK-Keymap](https://github.com/basch-de/zmk-config/blob/17dc18d4065161066a459656a87f36f11cd4ae88/config/corne_choc_pro.keymap)
-  und [Konfiguration](https://github.com/basch-de/zmk-config/blob/17dc18d4065161066a459656a87f36f11cd4ae88/config/corne_choc_pro.conf),
-  Commit `17dc18d4065161066a459656a87f36f11cd4ae88`. Deren `west.yml` verwendet
-  ZMK `v0.3`; dessen Standarddefinitionen für `mt`, `lt` und Caps Word wurden
-  zusätzlich geprüft.
+Beide Tastaturen werden hauptsächlich unter macOS mit EurKEY next verwendet.
+Die [README](../README.md) ist der kurze Einstieg;
+[AGENTS.md](../AGENTS.md) enthält die Arbeitsregeln.
 
-Beide Tastaturen verwenden den offiziellen QMK-Branch `master`. Wie im
-Studio-Projekt wird dieser einmal je Workflow-Lauf aufgelöst; alle vier
-Buildvarianten verwenden anschließend denselben Commit. Der Build-Container
-folgt wie im offiziellen QMK-Workflow `ghcr.io/qmk/qmk_cli:latest`, ohne
-Digest-Pin. Das versionierte Keebart-Hardware-Overlay wird
-weiterhin aus diesem Repository übernommen.
-
-## Aufbau und unabhängige Builds
+## Architektur und Builds
 
 `qmk.json` enthält die persönlichen Targets:
 
@@ -90,7 +76,72 @@ Die Herstellerbelegungen bleiben unabhängige Kompilierungsprüfungen.
 Es wurde kein lokaler Firmware-Build ausgeführt. Alle Firmware-Builds finden
 in GitHub Actions statt. Es wurden keine anderen Repositories verändert.
 
-## Belegung
+### Container und Python-Abhängigkeiten
+
+Der gemeinsame Workflow verwendet direkt:
+
+```yaml
+container: ghcr.io/qmk/qmk_cli:latest
+```
+
+Das entspricht der Container-Auswahl im
+[offiziellen QMK-Userspace-Workflow](https://github.com/qmk/.github/blob/main/.github/workflows/qmk_userspace_build.yml).
+Es wird kein eigener Image-Digest festgeschrieben oder aus einem anderen Projekt
+übernommen. Jede Buildvariante zieht das unter `latest` verfügbare Image.
+Ein neues Image allein startet keinen Workflow-Lauf in diesem Repository.
+
+Wie im offiziellen QMK-Workflow wird nach dem Firmware-Checkout
+`pip install -r firmware/requirements.txt` ausgeführt. Dadurch werden die
+Python-Abhängigkeiten des verwendeten QMK-Stands installiert. Die tatsächlich
+verwendeten Paketversionen dokumentiert `pip freeze` im Provenance-Artefakt.
+
+### Reproduzierbarkeit
+
+Das tatsächlich gezogene Container-Image ist im Actions-Log der
+Container-Initialisierung nachvollziehbar.
+
+Der Tag `latest` ist beweglich. Auch die Firmware folgt dem aktuellen
+Mainline-`master`; die Python-Pakete folgen dessen Anforderungen. Damit wird die
+Buildumgebung automatisch aktualisiert; ein identischer Userspace-Commit allein
+garantiert keinen vollständig identischen späteren Build. Alle vier Varianten
+verwenden denselben einmal pro Workflow-Lauf aufgelösten Firmware-Commit.
+
+## Preonic Drop rev3
+
+Die Preonic verwendet 60 unabhängige 1u-Tasten im Raster 5 × 12; die ehemalige
+zentrale 2u-Leertaste ist aufgeteilt. Maßgeblich sind die Belegungen und Diagramme
+in `keyboards/preonic/keymaps/basch_de/keymap.c`.
+
+Die Layer heißen QWERTY, GAMING, LOWER, RAISE, ADJUST und WINDOW.
+LOWER und RAISE zusammen aktivieren ADJUST. Eigene Dual-Role-Aktionen sind
+Spotlight/Ctrl und Option-Backspace/WINDOW. Diese Hooks liegen in `behaviors.c`;
+QMK entscheidet weiterhin Tap oder Hold. WINDOW ist derzeit transparent.
+Physische DIP-Schalter und Encoder sind deaktiviert, da sie nicht installiert sind.
+Der bisherige Gaming-Layer wird durch die Corne-Portierung nicht erweitert.
+
+Die nativen Preonic-Tests prüfen kritische Layer-/Systemzugänge, ADJUST,
+Gaming-Zugang sowie beide eigenen Dual-Role-Aktionen. Tap-Hold-Gefühl und
+Hostausgabe bleiben an der Tastatur zu prüfen.
+
+## Corne MX Pro: ZMK-Portierung
+
+### Quellen und geprüfte Versionen
+
+- [Mainline QMK](https://github.com/qmk/qmk_firmware/tree/d194c077ed964195ec16d255c7a4b89a794cf03b),
+  bei der ursprünglichen Portierung geprüfter Commit
+  `d194c077ed964195ec16d255c7a4b89a794cf03b`. Aktuelle Builds folgen für beide
+  Tastaturen `master`; der tatsächlich verwendete Commit steht im Buildnachweis.
+- [Keebart-Hardwaredefinition](https://github.com/Keebart/vial-qmk-keebart/tree/63e2d6248209f1926e60daa5b950c771cf09d837/keyboards/keebart/corne_mx_pro),
+  Branch `vial`, Commit `63e2d6248209f1926e60daa5b950c771cf09d837`.
+  Übernommene Dateien und minimale Mainline-Anpassungen stehen in
+  [vendor/qmk/README.md](../vendor/qmk/README.md).
+- [Tatsächliche ZMK-Keymap](https://github.com/basch-de/zmk-config/blob/17dc18d4065161066a459656a87f36f11cd4ae88/config/corne_choc_pro.keymap)
+  und [Konfiguration](https://github.com/basch-de/zmk-config/blob/17dc18d4065161066a459656a87f36f11cd4ae88/config/corne_choc_pro.conf),
+  Commit `17dc18d4065161066a459656a87f36f11cd4ae88`. Deren `west.yml` verwendet
+  ZMK `v0.3`; dessen Standarddefinitionen für `mt`, `lt` und Caps Word wurden
+  zusätzlich geprüft.
+
+### Belegung
 
 Alle acht Layer wurden positionsgetreu aus der ZMK-Datei übertragen:
 `macos`, `num`, `sym`, `nav`, `win`, `short`, `numpad`, `sys`.
@@ -118,7 +169,7 @@ Symbol- und Shortcut-Keycodes entsprechen den HID-Tasten/Modifiern der Vorlage.
 Die tatsächliche Zeichenausgabe unter **EurKEY next** wurde nicht verifiziert;
 deshalb verwenden die Diagramme QMK-Namen und behaupten keine Host-Zuordnungen.
 
-## Tap/Hold und Startwerte
+### Tap/Hold und Startwerte
 
 Verwendet werden ausschließlich QMKs eigene Tap-Hold-Verarbeitung, dokumentierte
 Konfigurationsoptionen und Hooks. Es gibt keine eigene Timing-Engine und keine
@@ -126,19 +177,29 @@ Konfigurationsoptionen und Hooks. Es gibt keine eigene Timing-Engine und keine
 
 | ZMK-Behavior | QMK-Umsetzung | Tapping Term / Quick Tap (ms) |
 | --- | --- | --- |
-| `hml` / `hmr` | Mod-Tap, Chordal Hold, Permissive Hold nur für HRMs | 240 / 160 |
-| `hlt` | Layer-Tap, Hold-on-other-key-press | 180 / 0 |
-| `rhlt` (Tab/WIN) | Layer-Tap, Hold-on-other-key-press, Quick Tap | 180 / 160 |
-| `rlt` (Enter/NUMPAD) | Layer-Tap, normale Tap-bevorzugende QMK-Entscheidung | 220 / 200 |
-| `lcw` | Layer-Tap auf SHORT; Tap ruft `caps_word_toggle()` auf | 180 / 0 |
-| normales `lt` (Equal/SHORT) | Layer-Tap, Tap-bevorzugung | 180 / 0 |
+| `hml` / `hmr` | Mod-Tap, Chordal Hold, Permissive Hold nur für HRMs | 250 / 160 |
+| `hlt` | Layer-Tap, Hold-on-other-key-press | 200 / 0 |
+| `rhlt` (Tab/WIN) | Layer-Tap, Hold-on-other-key-press, Quick Tap | 200 / 160 |
+| `rlt` (Enter/NUMPAD) | Layer-Tap, normale Tap-bevorzugende QMK-Entscheidung | 200 / 200 |
+| `lcw` | Layer-Tap auf SHORT; Tap ruft `caps_word_toggle()` auf | 200 / 0 |
+| normales `lt` (Equal/SHORT) | Layer-Tap, Tap-bevorzugung | 200 / 0 |
 | normales `mt` (Spotlight/Hyper, Quote/Meh, Komma/Punkt) | Hold-on-other-key-press | 200 / 0 |
 
-Die längeren HRM- und Enter-Zeitfenster sollen Tap-Rolls ermöglichen; die kürzeren
-Hold-bevorzugenden Layer-Taps sollen beim Chorden zügig reagieren. Quick Tap
-bleibt nur für die in der Quelle wiederholbaren Tasten aktiv. Die Werte sind
-bewusst neu gewählte QMK-Startwerte; eine Verhaltensgleichheit ist damit noch
-nicht nachgewiesen. Anpassungen erfolgen nach Tipp- und Wiederholungstests.
+Die 250 ms für HRMs mit Permissive Hold und Chordal Hold folgen dem Startvorschlag
+der [offiziellen QMK-Dokumentation](https://docs.qmk.fm/tap_hold#configuring-home-row-mods)
+und [Pascal Getreuers HRM-Leitfaden](https://getreuer.info/posts/keyboards/hrms-are-hard/index.html).
+Alle anderen Dual-Role-Tasten verwenden QMKs allgemeinen Standard von 200 ms.
+Permissive Hold beziehungsweise Hold-on-other-key-press können einen Hold bereits
+vor Ablauf dieser Frist entscheiden. Die frühere Staffelung mit 180/220/240 ms
+war heuristisch gewählt und wurde ohne Nachweis eines Vorteils durch diese
+einfachere Ausgangskonfiguration ersetzt.
+
+Quick Tap bleibt unverändert nur für die in der Quelle wiederholbaren Tasten
+aktiv. Die 160 ms für HRMs und Tab sowie 200 ms für Enter sind weiterhin
+vorläufige Werte ohne allgemeine Quellenempfehlung für genau diese Zahlen.
+Sie werden getrennt anhand von Wiederholungen und schnellen Wechseln zum Hold
+abgestimmt. Eine Verhaltensgleichheit mit ZMK ist nicht nachgewiesen; weitere
+Anpassungen erfordern Tipp- und Wiederholungstests an der Tastatur.
 
 `chordal_hold_layout` kennzeichnet jede Hand explizit und alle sechs Daumentasten
 mit `'*'`. `get_chordal_hold()` begrenzt die Handregel auf die acht HRMs, sodass
@@ -151,7 +212,7 @@ Spotlight, Caps Word/SHORT und Komma/Punkt verwenden die dokumentierte
 in `process_record_user()`. QMK entscheidet dabei weiterhin Tap oder Hold.
 Ein gehaltener Punkt wird als Key-down/Key-up gesendet und kann am Host wiederholen.
 
-## Verbleibende Abweichungen und Alternativen
+### Verbleibende Abweichungen und Alternativen
 
 | Bereich | Verhalten und Grenze | Mögliche Alternative |
 | --- | --- | --- |
@@ -170,7 +231,10 @@ Ein gehaltener Punkt wird als Key-down/Key-up gesendet und kann am Host wiederho
 Die SYS-Tasten wurden nur belegt, nicht betätigt. Es wurden kein EEPROM-Reset,
 keine Flash-Löschung und kein Flashen ausgeführt.
 
-## Prüfung und Nachweise
+## Prüfstand und Hardwaretests
+
+Die folgenden Nachweise beziehen sich auf die jeweils genannten historischen
+Revisionen. Sie bestätigen keine späteren Keymap- oder Timingänderungen.
 
 Die Hardware wurde vor Beginn der persönlichen Portierung separat mit der
 Herstellerbelegung geprüft:
