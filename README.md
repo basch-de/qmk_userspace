@@ -15,17 +15,18 @@ ZMK behavior mapping, remaining differences, and the hardware test list.
 ## GitHub Actions
 
 The single workflow [build.yml](.github/workflows/build.yml) runs on pushes,
-pull requests, and manual starts. Its three independent matrix jobs build:
+pull requests, and manual starts. Its four independent matrix jobs build:
 
 | Variant | Firmware reference | Artifact |
 | --- | --- | --- |
 | `preonic-personal` | Official QMK `master`, resolved once per run | `Firmware` (BIN) |
+| `preonic-default` | Same resolved official QMK commit | `preonic-default` (BIN) |
 | `corne-standard-default` | Pinned official QMK commit | `corne-standard-default` (UF2) |
 | `corne-personal` | Same pinned official QMK commit | `corne-standard-basch_de` (UF2) |
 
 Each job compiles only its selected target with `qmk mass-compile`. A failure
-in one variant does not cancel the other builds. The manufacturer Corne keymap
-uses a separate userspace without personal keymap files. Only the Corne jobs
+in one variant does not cancel the other builds. Both manufacturer keymaps
+use separate userspaces without personal keymap files. Only the Corne jobs
 install the hardware overlay; the versioned `qmk.json` is left unchanged.
 
 Like the Studio project's build structure, the workflow uses a fixed QMK
@@ -35,9 +36,10 @@ build logs, and firmware checksums. These are uploaded as `provenance-<variant>`
 artifacts, including available logs when compilation fails.
 
 Download the firmware from **Actions → Build QMK firmware → run → Artifacts**.
-The existing Preonic `latest` release is refreshed on `main`, independently of
-Corne build success. A missing Preonic artifact leaves the previous release
-intact. Pull requests do not publish releases.
+The existing personal Preonic `latest` release is refreshed on `main`,
+independently of the other variants' build success. A missing personal Preonic
+artifact leaves the previous release intact. The Preonic `default` build is
+provided as an Actions artifact. Pull requests do not publish releases.
 
 All firmware compilation takes place in GitHub Actions. The workflow does not
 flash devices, clear EEPROM, or delete device flash. Compilation success does

@@ -53,6 +53,14 @@ jobs:
             extension: bin
             artifact: Firmware
             corne: false
+          - variant: preonic-default
+            keyboard: preonic/rev3_drop
+            keymap: default
+            firmware: ${{ needs.firmware-revision.outputs.preonic }}
+            overlay: stock-userspace
+            extension: bin
+            artifact: preonic-default
+            corne: false
           - variant: corne-standard-default
             keyboard: keebart/corne_mx_pro/standard
             keymap: default
@@ -176,8 +184,8 @@ jobs:
         with:
           persist-credentials: false
 
-      # A failed Corne job does not prevent publication. Missing Preonic firmware
-      # fails this step and leaves the previous release intact.
+      # Other variant failures do not prevent publication. Missing personal
+      # Preonic firmware fails this step and leaves the previous release intact.
       - name: Download Preonic firmware
         uses: actions/download-artifact@v8
         with:

@@ -37,14 +37,15 @@ ein isolierter Hersteller-Userspace und getrennte Firmware-/Provenance-Artefakte
 Firmware-Basis bleibt offizielles Mainline-QMK. Die bisherigen zwei Workflows
 wurden durch diese eine Datei ersetzt.
 
-Die zusätzliche Variante `corne-standard-default` baut die Hersteller-Keymap als
-Hardware-Referenz ohne persönliche Keymap-Dateien. Alle drei Varianten laufen
+Die zusätzlichen Varianten `preonic-default` und `corne-standard-default` bauen
+die Hersteller-Keymaps als Hardware-Referenzen ohne persönliche Keymap-Dateien.
+Alle vier Varianten laufen
 mit `fail-fast: false`; jeder Job kompiliert ausschließlich sein explizites
 Target mit `qmk mass-compile`. Die versionierte `qmk.json` wird nicht verändert.
 Nur die Corne-Jobs installieren das Hardware-Overlay. Die Preonic-Keymap,
 `config.h` und `rules.mk` bleiben unverändert.
 
-Pro Lauf wird der aktuelle Mainline-`master` für die Preonic einmal aufgelöst.
+Pro Lauf wird der aktuelle Mainline-`master` für beide Preonic-Varianten einmal aufgelöst.
 Beide Corne-Jobs verwenden denselben bisherigen gepinnten Mainline-Commit.
 Ein neuer QMK-Commit startet keinen Lauf in diesem Repository; der nächste
 Push, Pull Request oder manuelle Start nutzt die zugehörigen Referenzen.
@@ -52,6 +53,7 @@ Push, Pull Request oder manuelle Start nutzt die zugehörigen Referenzen.
 Erwartete Firmware-Artefakte:
 
 - `Firmware`: Preonic-BIN, mit der bisherigen Veröffentlichung kompatibel.
+- `preonic-default`: BIN der originalen Mainline-Preonic-Standardbelegung.
 - `corne-standard-default`: UF2 der Herstellerbelegung.
 - `corne-standard-basch_de`: UF2 der persönlichen Corne-Keymap.
 
@@ -60,9 +62,10 @@ Submodulen, Compiler, Python-Paketen, Buildlog und Firmware-Prüfsumme hinzu.
 Auch bei fehlgeschlagener Kompilierung werden vorhandene Logs hochgeladen.
 Im Actions-Tab den Lauf **Build QMK firmware** und dessen **Artifacts** öffnen.
 
-Die Preonic-Veröffentlichung unter `latest` bleibt auf `main` erhalten.
-Sie wartet auf den Abschluss der Matrix, wird aber auch bei einem fehlgeschlagenen
-Corne-Job ausgeführt. Ohne erfolgreich hochgeladenes Preonic-Artefakt wird die
+Die Veröffentlichung der persönlichen Preonic-Keymap unter `latest` bleibt
+auf `main` erhalten. Sie wartet auf den Abschluss der Matrix, wird aber auch
+bei fehlgeschlagenen anderen Varianten ausgeführt. Ohne erfolgreich
+hochgeladenes persönliches Preonic-Artefakt wird die
 vorherige Veröffentlichung nicht gelöscht. Pull Requests veröffentlichen keine
 Releases. Corne-Firmware bleibt als unabhängiges Actions-Artefakt verfügbar.
 

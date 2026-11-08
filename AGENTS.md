@@ -160,18 +160,21 @@ eingebundenen QMK-Version. Keine lokalen Builds ausführen.
 
 Der gemeinsame Workflow `build.yml` hält die Builds unabhängig:
 
-- Drei Matrix-Jobs bauen Preonic `basch_de`, Corne `default` und Corne `basch_de`.
+- Vier Matrix-Jobs bauen jeweils `default` und `basch_de` für Preonic und Corne.
   `fail-fast: false` verhindert, dass ein fehlgeschlagener Build andere abbricht.
 - Jeder Job kompiliert nur sein explizites Target. Die versionierte `qmk.json`
   bleibt dabei unverändert und enthält beide persönlichen Targets.
-- Nur die Corne-Jobs installieren das Hardware-Overlay. Die Herstellerbelegung
-  verwendet einen separaten Userspace ohne persönliche Keymap-Dateien.
+- Nur die Corne-Jobs installieren das Hardware-Overlay. Beide `default`-Builds
+  verwenden je einen separaten Userspace ohne persönliche Keymap-Dateien.
+  Beide Preonic-Varianten verwenden denselben pro Lauf aufgelösten QMK-Commit.
 - Firmware und Provenance werden je Variante als Actions-Artefakte gespeichert:
   QMK-/Userspace-Revisionen, Submodule, Compiler, Python-Pakete, Buildlog und
   Firmware-Prüfsumme. Der QMK-Container ist per Digest festgelegt.
-- Die Preonic behält ihr `Firmware`-Artefakt und die Veröffentlichung unter
-  `latest` auf `main`. Corne-Fehler verhindern diese Veröffentlichung nicht;
-  ohne Preonic-Artefakt bleibt die vorherige Veröffentlichung erhalten.
+- Die persönliche Preonic-Keymap behält ihr `Firmware`-Artefakt und die
+  Veröffentlichung unter `latest` auf `main`. Fehler der anderen Varianten
+  verhindern diese Veröffentlichung nicht; ohne persönliches Preonic-Artefakt
+  bleibt die vorherige Veröffentlichung erhalten. Preonic `default` wird als
+  separates `preonic-default`-BIN-Artefakt bereitgestellt.
 - Pushes, Pull Requests und manuelle Starts nutzen denselben Workflow.
   Pull Requests veröffentlichen keine Releases. Keine Flash-Schritte ergänzen.
 
