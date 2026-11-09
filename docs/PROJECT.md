@@ -177,9 +177,9 @@ Konfigurationsoptionen und Hooks. Es gibt keine eigene Timing-Engine und keine
 
 | ZMK-Behavior | QMK-Umsetzung | Tapping Term / Quick Tap (ms) |
 | --- | --- | --- |
-| `hml` / `hmr` | Mod-Tap, Chordal Hold, Permissive Hold nur für HRMs | 250 / 160 |
+| `hml` / `hmr` | Mod-Tap, Chordal Hold, Permissive Hold nur für HRMs | 250 / 200 |
 | `hlt` | Layer-Tap, Hold-on-other-key-press | 200 / 0 |
-| `rhlt` (Tab/WIN) | Layer-Tap, Hold-on-other-key-press, Quick Tap | 200 / 160 |
+| `rhlt` (Tab/WIN) | Layer-Tap, Hold-on-other-key-press, Quick Tap | 200 / 200 |
 | `rlt` (Enter/NUMPAD) | Layer-Tap, normale Tap-bevorzugende QMK-Entscheidung | 200 / 200 |
 | `lcw` | Layer-Tap auf SHORT; Tap ruft `caps_word_toggle()` auf | 200 / 0 |
 | normales `lt` (Equal/SHORT) | Layer-Tap, Tap-bevorzugung | 200 / 0 |
@@ -194,12 +194,13 @@ vor Ablauf dieser Frist entscheiden. Die frühere Staffelung mit 180/220/240 ms
 war heuristisch gewählt und wurde ohne Nachweis eines Vorteils durch diese
 einfachere Ausgangskonfiguration ersetzt.
 
-Quick Tap bleibt unverändert nur für die in der Quelle wiederholbaren Tasten
-aktiv. Die 160 ms für HRMs und Tab sowie 200 ms für Enter sind weiterhin
-vorläufige Werte ohne allgemeine Quellenempfehlung für genau diese Zahlen.
-Sie werden getrennt anhand von Wiederholungen und schnellen Wechseln zum Hold
-abgestimmt. Eine Verhaltensgleichheit mit ZMK ist nicht nachgewiesen; weitere
-Anpassungen erfordern Tipp- und Wiederholungstests an der Tastatur.
+Quick Tap ist nur für die in der Quelle wiederholbaren Tasten aktiv: HRMs,
+Tab und Enter verwenden jeweils 200 ms; alle anderen Dual-Role-Tasten 0 ms.
+Der HRM-Wert erhält die in ZMK gewählten 200 ms. Die ZMK-Werte von 250 ms für
+Tab und Enter werden auf deren QMK-Tapping-Term von 200 ms begrenzt.
+Eine zusätzliche Verkürzung auf 160 ms ist nicht erforderlich. Quick Tap wird
+anhand von Wiederholungen und schnellen Wechseln zum Hold geprüft; gleiche
+Zahlen allein beweisen keine Verhaltensgleichheit mit ZMK.
 
 `chordal_hold_layout` kennzeichnet jede Hand explizit und alle sechs Daumentasten
 mit `'*'`. `get_chordal_hold()` begrenzt die Handregel auf die acht HRMs, sodass
@@ -218,14 +219,14 @@ Ein gehaltener Punkt wird als Key-down/Key-up gesendet und kann am Host wiederho
 | --- | --- | --- |
 | `hold-trigger-on-release` | Chordal Hold entscheidet bei gleichhändigen Kombinationen bereits beim Drücken der zweiten Taste auf Tap. ZMK wartet bei dieser Option auf deren Loslassen. Mehrtastenfolgen können deshalb unterschiedlich ausfallen. | Standard-QMK behalten und HRM-Timings nach Hardwaretests anpassen; bei Bedarf die dokumentierte Handregel gezielt ändern. |
 | Mehrere gleichhändige HRMs | QMK erlaubt bestimmte gestapelte Mod-Tap-Chords trotz Handregel; das ist keine exakte Nachbildung der ZMK-Triggerliste. | Chords praktisch testen; gegebenenfalls einen dokumentierten alternativen HRM-Ansatz wählen. |
-| Quick Tap | QMK begrenzt Quick Tap auf den Tapping Term und unterscheidet sich bei Wiederholungs-/Unterbrechungsfolgen von ZMK. Die ZMK-Werte 200/250 werden deshalb nicht unverändert übernommen. | Eigene QMK-Werte nach Repeat-Tests abstimmen. |
-| Caps Word | Toggle, unbegrenzte Leerlaufdauer, Buchstaben, auch implizit geshiftete Ziffern, Unterstrich, Backspace und Delete sind übernommen. Deaktivierte Tasten verändern den Zustand nicht. Ein normaler Bindestrich beendet Caps Word wie in ZMK; Shift setzt es fort. QMK beendet Caps Word beim Aktivieren von Ctrl/Cmd/linkem Alt, während ZMK reine Modifier passieren lässt. | Dokumentiertes Standard-QMK-Verhalten akzeptieren; keine Umgehung der Tastenverarbeitung. |
+| Quick Tap | QMK begrenzt Quick Tap auf den Tapping Term und unterscheidet sich bei Wiederholungs-/Unterbrechungsfolgen von ZMK. HRMs behalten 200 ms; Tab und Enter verwenden wegen dieser Grenze 200 statt der ZMK-250 ms. | Werte nach Repeat-Tests abstimmen. |
+| Caps Word | Auf Nutzerauftrag QMK-Standard ohne eigenen Fortsetzungs-Hook oder Timeout-Override: aktuell fünf Sekunden Idle-Timeout, Buchstaben werden großgeschrieben und `KC_MINS` wird zu Unterstrich und setzt das Wort fort. Ziffern, `KC_UNDS`, Backspace und Delete setzen es ebenfalls fort; Shift und andere worttrennende Tasten beenden es. Das unterscheidet sich bewusst von der ZMK-Vorlage. Caps-Word-Toggle/SHORT bleibt erhalten. | Hostausgabe und Bedienung an der Tastatur prüfen; keine eigene Caps-Word-Verarbeitung ergänzen. |
 | `C_VOICE_COMMAND` | Auf Nutzerauftrag durch QMK `KC_ASST` (Assistant) an derselben Position ersetzt. ZMK sendet Consumer Usage `0xCF`; QMK sendet `0x1CB`. Damit ist die Taste belegt, aber die HID-Aktion unterscheidet sich. | Hostwirkung unter macOS prüfen; bei Bedarf einen dort konfigurierten Shortcut festlegen. |
 | `C_PWR` | Auf Nutzerauftrag durch QMK `KC_PWR` (System Power) an derselben Position ersetzt. ZMK nutzt Consumer Power `0x30`; QMK nutzt System Power mit anderer Semantik. | Gewählte System-Power-Aktion bewusst am Host prüfen. |
 | Bluetooth / externe Versorgung | Die fünf Profilplätze, BT-Clear und External-Power-Toggle bleiben deaktiviert; diese kabelgebundene RP2040-Definition stellt die ZMK-Funktionen nicht bereit. | Keine Firmware-Nachbildung; gegebenenfalls geeignete Hardware wählen. |
 | Studio | `studio_unlock` bleibt deaktiviert. | Änderungen in der versionierten QMK-Keymap. |
-| RGB / Schlafen | Hersteller-RGB-Matrix und Encoder erhalten; SYS steuert RGB Matrix. Persönliche Defaults: Hue 142, Sat 250, Value 51; fünf Minuten RGB-Leerlaufabschaltung, Helligkeitsschritt 13. Herstellerlimit 100/255 bleibt bestehen. ZMK-Effekte, Wireless-Deep-Sleep nach 30 Minuten und BLE-Energieverwaltung werden nicht nachgebildet. | Standard-RGB-Matrix-Effekte am Gerät auswählen; Defaults gelten nur ohne gespeicherte Einstellungen. |
-| OLED / Encoder | Hersteller-Konfiguration bleibt aktiviert; vier Encoder-Aktionen gelten auf allen persönlichen Layern. Es wird keine zusätzliche Display-Oberfläche eingeführt. Der Hersteller verwendet teilweise gemeinsame I2C-/Encoder-Pins. | Tatsächliche Bestückung und optionale Peripherie prüfen; Pinänderungen nur anhand bestätigter Hardwaredaten. |
+| RGB / Schlafen | Hersteller-RGB-Matrix erhalten; SYS steuert RGB Matrix. Auf Nutzerauftrag QMK-Standard ohne LED-Leerlaufabschaltung; `RGB_MATRIX_SLEEP` aus der Hardwaredefinition schaltet die Beleuchtung beim Host-Suspend aus. Persönliche Farbdefaults: Hue 142, Sat 250, Value 51; Helligkeitsschritt 13. Herstellerlimit 100/255 bleibt bestehen. ZMK-Effekte, Wireless-Deep-Sleep nach 30 Minuten und BLE-Energieverwaltung werden nicht nachgebildet. | Standard-RGB-Matrix-Effekte am Gerät auswählen; Farbdefaults gelten nur ohne gespeicherte Einstellungen. |
+| OLED / Encoder | Die persönliche Corne hat keine Encoder. `ENCODER_ENABLE` und `ENCODER_MAP_ENABLE` sind dort deaktiviert; die persönliche Encoder-Map entfällt. Alle 46 Tastenpositionen bleiben erhalten. Hersteller-Hardwaredefinition, `default`-Keymap und OLED-Konfiguration bleiben unverändert. Es wird keine zusätzliche Display-Oberfläche eingeführt. | Optionale Peripherie nur passend zur tatsächlichen Bestückung aktivieren; Pinänderungen nur anhand bestätigter Hardwaredaten. |
 | Split-Systemaktionen | `QK_BOOT`, `QK_RBT` und `EE_CLR` sind von beiden Seiten erreichbar, wirken bei normalem Split-Betrieb auf den USB-Master. Das Betätigen auf einer Seite adressiert nicht automatisch deren MCU. | Für die andere Hälfte deren vorhandene physische BOOT-/RESET-Wege verwenden; kein eigener Split-RPC in dieser Version. |
 
 Die SYS-Tasten wurden nur belegt, nicht betätigt. Es wurden kein EEPROM-Reset,
@@ -272,10 +273,88 @@ Noch an der Tastatur zu testen:
 3. Tap-Hold-Grenzen, schnelles Tap-dann-Halten von Tab/Enter, Buchstabenwiederholung,
    Hyper/Spotlight, Caps Word/SHORT und Komma/Punkt einschließlich Host-Repeat.
 4. EurKEY-next-Zeichen, Option-/Cmd-Kombinationen, Screenshot-/Fenster-Shortcuts.
-5. Split-Kommunikation, USB-Master auf beiden Seiten, RGB/Idle und vorhandene Encoder/OLED.
+5. Split-Kommunikation, USB-Master auf beiden Seiten, RGB/Host-Suspend und gegebenenfalls OLED.
    Systemtasten erst bei bewusst gewünschtem Neustart/Bootloader/EEPROM-Reset testen.
 
 Referenzen: [Tap-Hold / Chordal Hold](https://docs.qmk.fm/tap_hold),
 [Caps Word](https://docs.qmk.fm/features/caps_word),
 [External Userspace](https://docs.qmk.fm/newbs_external_userspace),
 [Split Keyboard](https://docs.qmk.fm/features/split_keyboard).
+
+## Manueller Export für Keebart Studio
+
+`exports/` ist ein lokaler, Git-ignorierter Ausgabeordner. Die aktuell
+importierbare Datei liegt unter
+`exports/corne_mx_pro_basch_de/basch_de.keebart`.
+
+Der Export wurde manuell aus der Corne-Keymap und ihren Behaviors in ein natives
+Studio-Profil übertragen. Änderungen an den QMK-Quelldateien aktualisieren ihn
+nicht automatisch. Grundlage war eine Sicherung aus Studio 0.7.2. Die
+QMK-Quelldateien bleiben die maßgebliche Mainline-Konfiguration; der Export
+ist keine Firmwarekomponente und wird von den QMK-Builds nicht verwendet.
+
+Der zusammengeführte C-Zwischenstand wurde entfernt: Studio konnte dessen
+QMK-Hooks nicht importieren. Am 2026-11-09 hat der Nutzer den erfolgreichen
+Import der korrigierten `.keebart`-Datei und erstes Tippen auf der Tastatur
+bestätigt. Gezielte Verhaltenstests stehen weiterhin aus.
+
+### Übertragene Daten
+
+- Alle 368 physischen Belegungen auf acht benannten Layern in der 8×7-Matrix.
+- 16 Layerplätze bleiben erhalten; nur die ersten acht sind sichtbar.
+- 19 Studio-Compound-Aktionen bilden die QMK-Dual-Role-Tasten und abgefangenen Taps ab.
+- HRMs: 250 ms, Permissive Hold, Chordal Hold, 200 ms Quick Tap.
+- Andere Dual-Role-Tasten: 200 ms; Quick Tap für Tab und Enter 200 ms, sonst 0.
+- Sechs Daumentasten als Chordal-Hold-Ausnahmen. `chordal_exempt` enthält
+  Matrixpositionsnummern (`row * 7 + col`): `[24,25,26,52,53,54]`.
+  Die ursprünglichen `{row, col}`-Objekte verursachten den inzwischen behobenen
+  Importfehler `invalid type: map, expected u8`.
+- Spotlight/Hyper, Caps Word/SHORT, Komma/Punkt, Assistant und System Power.
+- Ohne physische Encoder sind alle Drehaktionen unbelegt. Das Geräteschema
+  behält vier leere Encoderplätze je Layer; `encoder_views` bleibt leer.
+  Alle 46 normalen Tastenpositionen bleiben verfügbar.
+- Kein eigener LED-Inaktivitäts-Timeout; es gilt der Firmware-Standard.
+  Farben, Helligkeit, Computerprofil, Geräteidentität und Hardware-Metadaten
+  stammen aus der ursprünglichen Sicherung.
+- Last-verified- und Checkpoint-Daten stammen ebenfalls aus der Sicherung.
+  Sie belegen keine Anwendung oder Prüfung des neuen Profils.
+
+### Unterschiede und Prüfstand
+
+- Studio verwendet eine eigene Compound-Engine. Die QMK-Callbacks sind in
+  Einstellungen übersetzt und werden nicht ausgeführt. Timing, Tastenkombinationen
+  und Loslassen müssen noch geprüft werden, einschließlich der unbelegten inneren
+  Tasten und der Wiederholung beim gehaltenen Punkt.
+- Mainline verwendet Standard-QMK-Caps-Word ohne eigenen Fortsetzungs-Hook oder
+  Timeout-Override. Das Studio-Profil verwendet den Caps-Word-Toggle der Firmware.
+  Deren Verhalten muss noch an der Tastatur geprüft werden; die zugehörigen
+  Firmwareoptionen sind nicht im Backup hinterlegt.
+- Mainline-RGB-Startwerte und `RGB_MATRIX_VAL_STEP=13` werden einkompiliert.
+  Der Import behält die Beleuchtungskonfiguration aus der Studio-Sicherung.
+- JSON, Matrix-/Aktionsreferenzen und Prüfsumme wurden statisch geprüft.
+  Import und erstes Tippen sind vom Nutzer bestätigt. Vollständige
+  Tap/Hold-Gleichheit sowie alle Layer und Sonderaktionen sind noch nicht geprüft.
+
+### Tap/Hold-Aktionen
+
+| Slot | QMK-Belegung | Tap | Hold | Term (ms) | Quick Tap (ms) | Permissive | Tap bevorzugt | Chordal |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | `SYS_GRV` | `0x0035` | `0x5227` | 200 | 0 | False | False | False |
+| 1 | `HYP_SPOT` | `0x082C` | `0x0F00` | 200 | 0 | False | False | False |
+| 2 | `LCTL_T(KC_A)` | `0x0004` | `0x00E0` | 250 | 200 | True | False | True |
+| 3 | `LGUI_T(KC_S)` | `0x0016` | `0x00E3` | 250 | 200 | True | False | True |
+| 4 | `LALT_T(KC_D)` | `0x0007` | `0x00E2` | 250 | 200 | True | False | True |
+| 5 | `LSFT_T(KC_F)` | `0x0009` | `0x00E1` | 250 | 200 | True | False | True |
+| 6 | `RSFT_T(KC_J)` | `0x000D` | `0x00E5` | 250 | 200 | True | False | True |
+| 7 | `RALT_T(KC_K)` | `0x000E` | `0x00E6` | 250 | 200 | True | False | True |
+| 8 | `RGUI_T(KC_L)` | `0x000F` | `0x00E7` | 250 | 200 | True | False | True |
+| 9 | `RCTL_T(KC_SCLN)` | `0x0033` | `0x00E4` | 250 | 200 | True | False | True |
+| 10 | `MEH_T(KC_QUOT)` | `0x0034` | `0x0700` | 200 | 0 | False | False | False |
+| 11 | `SHORT_EQL` | `0x002E` | `0x5225` | 200 | 0 | False | True | False |
+| 12 | `NAV_ESC` | `0x0029` | `0x5223` | 200 | 0 | False | False | False |
+| 13 | `NUM_BSPC` | `0x002A` | `0x5221` | 200 | 0 | False | False | False |
+| 14 | `WIN_TAB` | `0x002B` | `0x5224` | 200 | 200 | False | False | False |
+| 15 | `PAD_ENT` | `0x0028` | `0x5226` | 200 | 200 | False | True | False |
+| 16 | `SYM_SPC` | `0x002C` | `0x5222` | 200 | 0 | False | False | False |
+| 17 | `SHORT_CW` | `0x7C73` | `0x5225` | 200 | 0 | False | False | False |
+| 18 | `COMM_DOT` | `0x0036` | `0x0037` | 200 | 0 | False | False | False |

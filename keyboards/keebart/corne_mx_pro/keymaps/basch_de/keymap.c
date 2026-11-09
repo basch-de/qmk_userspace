@@ -119,20 +119,3 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 KC_NO,  KC_NO,  KC_NO,                  KC_NO,    KC_NO,    KC_NO
 ),
 };
-
-// Retain the manufacturer's four encoder actions on every personal layer.
-#define CORNE_ENCODERS { ENCODER_CCW_CW(RM_NEXT, RM_PREV), \
-                         ENCODER_CCW_CW(RM_HUEU, RM_HUED), \
-                         ENCODER_CCW_CW(RM_VALU, RM_VALD), \
-                         ENCODER_CCW_CW(RM_SATU, RM_SATD) }
-
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [_MACOS]  = CORNE_ENCODERS,
-    [_NUM]    = CORNE_ENCODERS,
-    [_SYM]    = CORNE_ENCODERS,
-    [_NAV]    = CORNE_ENCODERS,
-    [_WIN]    = CORNE_ENCODERS,
-    [_SHORT]  = CORNE_ENCODERS,
-    [_NUMPAD] = CORNE_ENCODERS,
-    [_SYS]    = CORNE_ENCODERS,
-};

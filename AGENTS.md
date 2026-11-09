@@ -14,6 +14,9 @@ einem gemeinsamen QMK External Userspace. Beide verwenden die Keymap `basch_de`.
 
 - Keyboard-Target: `keebart/corne_mx_pro/standard`
 - Controller: RP2040
+- Keine physischen Encoder: im persönlichen Build `ENCODER_ENABLE = no` und
+  `ENCODER_MAP_ENABLE = no`; keine persönliche Encoder-Map pflegen. Die
+  Hersteller-Hardwaredefinition und deren `default`-Keymap bleiben unverändert.
 - Persönliche Keymap: `keyboards/keebart/corne_mx_pro/keymaps/basch_de/`
 - Hardwaredefinition und Hersteller-Keymap `default`:
   `vendor/qmk/keyboards/keebart/corne_mx_pro/`
@@ -167,13 +170,17 @@ und `rules.mk` auf Englisch verfassen. Die Kommunikation bleibt auf Deutsch.
   Keycodes und einfache C-Logik nur über die offizielle QMK-API umsetzen.
 - Keine eigene Tap-Hold-Engine und keine undokumentierten Eingriffe in interne
   Strukturen oder die Tastenverarbeitung einführen.
+- Caps Word verwendet auf Nutzerauftrag den QMK-Standard ohne eigenen
+  `caps_word_press_user()`-Hook und ohne Override von `CAPS_WORD_IDLE_TIMEOUT`.
+  Der bestehende Caps-Word-Tap/SHORT-Hold-Zugang bleibt erhalten.
 - HRMs verwenden Chordal Hold und Permissive Hold mit expliziter Hand- und
   Daumenzuordnung. Layer-Taps und äußere Mod-Taps haben eigene Regeln.
   Unterschiede zu ZMK `balanced` und `hold-trigger-on-release` beachten.
 - Tapping Terms und Quick-Tap-Werte sind QMK-Startwerte für Hardwaretests.
   Aktuelle Timingbasis: 250 ms für HRMs, 200 ms für andere Dual-Role-Tasten.
-  Quick Tap separat abstimmen; bisherige Werte bleiben vorläufig. Quellen und
-  konkrete Werte stehen in `docs/PROJECT.md` und `behaviors.c`.
+  Quick Tap: 200 ms für HRMs, Tab und Enter, sonst 0 ms. Wiederholung beibehalten
+  und separat an der Tastatur prüfen. Quellen und konkrete Werte stehen in
+  `docs/PROJECT.md` und `behaviors.c`.
   ZMK-Timingwerte nicht ungeprüft übernehmen oder Verhaltensgleichheit behaupten.
 - Nicht vollständig abbildbare ZMK-Funktionen und mögliche Alternativen in
   `docs/PROJECT.md` dokumentieren. Deaktivierte Funktionen nicht ohne
@@ -187,6 +194,24 @@ und `rules.mk` auf Englisch verfassen. Die Kommunikation bleibt auf Deutsch.
   nicht automatisch die Hälfte, auf der die Taste gedrückt wurde.
 - Split-Kommunikation, RGB und vorhandene Encoder/OLED erhalten. Pinänderungen
   nur anhand geprüfter Hardwaredaten vornehmen.
+- LED-Leerlaufabschaltung auf QMK-Standard belassen: kein eigener
+  `RGB_MATRIX_TIMEOUT`-Override. `RGB_MATRIX_SLEEP` für Host-Suspend erhalten.
+
+## Manueller Studio-Export
+
+- `exports/` ist ein lokaler, Git-ignorierter Ausgabeordner. Dort nur fertige
+  Exportdateien ablegen; keine Quelltextkopien, Sicherungen oder Dokumentation.
+  Exportdetails und Prüfstand zentral in `docs/PROJECT.md` pflegen.
+- Die importierbare Corne-Datei ist
+  `exports/corne_mx_pro_basch_de/basch_de.keebart`. Sie wird manuell übertragen;
+  Änderungen an Keymap oder Behaviors aktualisieren sie nicht automatisch.
+  Bei einem erneuten Export die aktuelle Belegung und Verhaltenseinstellungen
+  prüfen und die Backup-Prüfsumme neu berechnen.
+- Die QMK-Quelldateien bleiben maßgeblich. Der Export gehört nicht zum
+  Firmware-Build und führt keine Studio-Abhängigkeit in Mainline-QMK ein.
+- Erfolgreichen Studio-Import, erste Schreibtests, gezielte Verhaltenstests und
+  Mainline-Buildnachweise getrennt dokumentieren. Ein erfolgreicher Import
+  bestätigt keine vollständige Verhaltensgleichheit.
 
 # Builds und Prüfung
 

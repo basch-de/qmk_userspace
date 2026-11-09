@@ -27,13 +27,12 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
     (void)record;
     if (is_home_row_mod(keycode)) {
-        return 160;
+        return QUICK_TAP_TERM;
     }
     switch (keycode) {
         case WIN_TAB:
-            return 160;
         case PAD_ENT:
-            return 200;
+            return QUICK_TAP_TERM;
         default:
             return 0;
     }
@@ -119,26 +118,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
     }
     return true;
-}
-
-bool caps_word_press_user(uint16_t keycode) {
-    switch (keycode) {
-        case KC_A ... KC_Z:
-            add_weak_mods(MOD_BIT(KC_LSFT));
-            return true;
-        case KC_1 ... KC_0:
-        case S(KC_1) ... S(KC_0):
-        case KC_NO:
-        case KC_BSPC:
-        case KC_DEL:
-        case KC_UNDS:
-        case KC_LSFT:
-        case KC_RSFT:
-            return true;
-        case KC_MINS:
-            // ZMK continues an underscore, but a plain hyphen ends the word.
-            return (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
-        default:
-            return false;
-    }
 }

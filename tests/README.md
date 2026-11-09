@@ -13,8 +13,8 @@ our tests. The production rules compile `behaviors.c` as a separate source file,
 just as in the firmware builds. QMK discovers these
 test suites normally; no QMK core source or existing tests are patched.
 
-The adapter exposes the compiled encoder table without emulating encoder
-hardware. Test fixtures load the actual compiled keymap into QMK's standard
+Neither personal keyboard has physical encoders; encoder support is disabled
+in their production rules. Test fixtures load the actual compiled keymap into QMK's standard
 per-test keymap facility. Matrix scanning, tapping, layers, user callbacks,
 Caps Word and keyboard report generation use real QMK code. GPIO, time, EEPROM
 and USB transport use QMK's native test backends. System power/reset/boot/EEPROM-clear
@@ -29,7 +29,8 @@ Coverage includes:
   modifier stacking and same-hand rolls past the tapping term.
 - Quick Tap inside/outside its window, Tab/Enter repeat, and 16-bit timer wrap.
 - Hold-preferred/tap-preferred layer taps, every layer entrance, NUMPAD toggle.
-- Spotlight/Hyper, Caps Word/SHORT, Caps Word continuation/termination, comma/dot
+- Spotlight/Hyper, Caps Word/SHORT, standard Caps Word continuation/termination
+  and idle timeout, comma/dot
   hold and release after a layer change.
 - Preonic Lower+Raise/Adjust, Gaming access and direct Shift, Spotlight/Ctrl,
   and Option-Backspace/Window.

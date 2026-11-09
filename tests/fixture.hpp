@@ -11,10 +11,6 @@ extern "C" {
 #include "action_util.h"
 #include "keymap_introspection.h"
 void set_time(uint32_t time);
-#ifdef TEST_CORNE
-unsigned tested_encoder_layers(void);
-uint16_t tested_encoder_code(unsigned, unsigned, unsigned);
-#endif
 }
 
 // QMK supplies the matrix, timer, EEPROM backend and host driver test doubles.

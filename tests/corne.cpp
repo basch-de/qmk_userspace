@@ -46,16 +46,6 @@ TEST_F(Corne, SystemActionsAreSymmetricAndConfinedToSys) {
     }
 }
 
-TEST_F(Corne, EncoderActionsCoverEveryLayer) {
-    ASSERT_EQ(tested_encoder_layers(), expected_layers);
-    for (unsigned layer = 0; layer < expected_layers; ++layer)
-        for (unsigned encoder = 0; encoder < 4; ++encoder)
-            for (unsigned direction = 0; direction < 2; ++direction) {
-                EXPECT_NE(tested_encoder_code(layer, encoder, direction), KC_NO);
-                EXPECT_EQ(tested_encoder_code(layer, encoder, direction), tested_encoder_code(0, encoder, direction));
-            }
-}
-
 TEST_P(CorneHrm, TapProducesOnlyTheLetter) {
     auto h = hrms[GetParam()];
     tap(h.position);
@@ -237,21 +227,27 @@ TEST_F(Corne, CapsWordCapitalizesLettersAndSpaceEndsTheWord) {
     expect_released();
 }
 
-TEST_F(Corne, CapsWordContinuesShiftedDigitsUnderscoreAndDisabledKeys) {
-    caps_word_on(); layer_on(SYM);
-    tap(1); EXPECT_TRUE(is_caps_word_on()); EXPECT_TRUE(saw(MOD_BIT(KC_LSFT), KC_1));
+TEST_F(Corne, CapsWordUsesStandardContinuationAndSymbolTermination) {
+    caps_word_on(); layer_on(NUM);
+    tap(1); EXPECT_TRUE(is_caps_word_on()); EXPECT_TRUE(saw(0, KC_1));
+    tap(13); EXPECT_TRUE(is_caps_word_on()); EXPECT_TRUE(saw(0, KC_BSPC));
+    layer_clear(); layer_on(NAV);
+    tap(13); EXPECT_TRUE(is_caps_word_on()); EXPECT_TRUE(saw(0, KC_DEL));
+    layer_clear(); layer_on(SYM);
     tap(34); EXPECT_TRUE(is_caps_word_on()); EXPECT_TRUE(saw(MOD_BIT(KC_LSFT), KC_MINS));
-    tap(6); EXPECT_TRUE(is_caps_word_on());
+    tap(1); EXPECT_FALSE(is_caps_word_on()); EXPECT_TRUE(saw(MOD_BIT(KC_LSFT), KC_1));
     layer_clear();
-    tap(41); EXPECT_TRUE(is_caps_word_on());
-    caps_word_off(); expect_released();
+    expect_released();
 }
 
-TEST_F(Corne, CapsWordHasNoIdleTimeoutButPlainHyphenEndsIt) {
-    caps_word_on(); idle_for(6000); EXPECT_TRUE(is_caps_word_on());
+TEST_F(Corne, CapsWordUsesStandardHyphenAndIdleTimeout) {
+    caps_word_on();
     tap(39);
-    EXPECT_FALSE(is_caps_word_on()); EXPECT_TRUE(saw(0, KC_MINS));
+    EXPECT_TRUE(is_caps_word_on()); EXPECT_TRUE(saw(MOD_BIT(KC_LSFT), KC_MINS));
     expect_released();
+    ASSERT_GT(CAPS_WORD_IDLE_TIMEOUT, 0);
+    idle_for(CAPS_WORD_IDLE_TIMEOUT - 50); EXPECT_TRUE(is_caps_word_on());
+    idle_for(100); EXPECT_FALSE(is_caps_word_on());
 }
 
 TEST_F(Corne, CommaTapAndHeldDotUseRealQmkTapHoldProcessing) {

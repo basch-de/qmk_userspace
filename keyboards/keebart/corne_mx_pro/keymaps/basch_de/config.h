@@ -9,12 +9,6 @@
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 #define CHORDAL_HOLD
 
-// ZMK v0.3 Caps Word has no idle timeout.
-#define CAPS_WORD_IDLE_TIMEOUT 0
-
-// Match the source's five-minute lighting idle timeout, not its wireless sleep.
-#define RGB_MATRIX_TIMEOUT 300000
-
 // Source defaults: hue 200 degrees, saturation 98%, brightness 20%.
 // Keep the manufacturer's maximum brightness of 100/255.
 #undef RGB_MATRIX_DEFAULT_HUE

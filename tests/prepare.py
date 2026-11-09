@@ -67,20 +67,7 @@ def main():
         '#define QMK_KEYBOARD_H "test_keyboard.h"\n'
     )
     adapter = '// SPDX-License-Identifier: GPL-2.0-or-later\n#include "test_keyboard.h"\n'
-    if flag == "TEST_CORNE":
-        encoders = len(metadata["encoder"]["rotary"]) + len(metadata["split"]["encoder"]["right"]["rotary"])
-        if encoders != 4:
-            raise SystemExit("Corne encoder count changed; review the host data adapter")
-        # Only expose the real encoder table; encoder hardware is not emulated.
-        adapter += f'#define NUM_ENCODERS {encoders}\n#define NUM_DIRECTIONS 2\n#define ENCODER_CCW_CW(ccw, cw) {{(cw), (ccw)}}\n'
     adapter += '#include "production_keymap.c"\n'
-    if flag == "TEST_CORNE":
-        adapter += '''
-unsigned tested_encoder_layers(void) { return sizeof(encoder_map) / sizeof(encoder_map[0]); }
-uint16_t tested_encoder_code(unsigned layer, unsigned encoder, unsigned direction) {
-    return encoder_map[layer][encoder][direction];
-}
-'''
     (destination / "keymap.c").write_text(adapter)
     (destination / "config.h").write_text(config)
     (destination / "test.mk").write_text(
